@@ -1,0 +1,24 @@
+{
+     "name": "myflix-client",
+     "source": "src/index.html",
+     "version": "1.0.0",
+     "scripts": {
+          "start": "parcel",
+          "build": "parcel build",
+          "test": "echo \"Error: no test specified\" && exit 1"
+     },
+     "author": "",
+     "license": "ISC",
+     "dependencies": {
+          "node-gyp": "^10.0.1"
+     },
+     "devDependencies": {
+          "@parcel/transformer-sass": "^2.11.0",
+          "parcel": "^2.11.0",
+          "process": "^0.11.10",
+          "react": "^18.2.0",
+          "react-dom": "^18.2.0"
+     },
+     "main": "index.js",
+     "description": ""
+}
