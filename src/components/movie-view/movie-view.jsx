@@ -1,14 +1,10 @@
-import React, { useEffect } from 'react';
-
 export default function MovieView({ movie, onBackClick }) {
-   useEffect(() => {
-      window.addEventListener('popstate', onBackClick);
-
-      return () => {
-         window.removeEventListener('popstate', onBackClick);
-      };
-   }, []);
-
+   /**
+    * Combines an array of genre objects into a single string of genre names, separated by commas.
+    *
+    * @param {Array<Object>} genres - An array of genre objects, where each object has a 'name' property.
+    * @returns {string} - A string containing the concatenated genre names separated by commas.
+    */
    function combineGenreNames(genres) {
       return genres.map((genre) => genre.name).join(', ');
    }
