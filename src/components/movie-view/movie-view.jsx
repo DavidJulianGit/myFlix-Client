@@ -1,14 +1,7 @@
-export default function MovieView({ movie, onBackClick }) {
-   /**
-    * Combines an array of genre objects into a single string of genre names, separated by commas.
-    *
-    * @param {Array<Object>} genres - An array of genre objects, where each object has a 'name' property.
-    * @returns {string} - A string containing the concatenated genre names separated by commas.
-    */
-   function combineGenreNames(genres) {
-      return genres.map((genre) => genre.name).join(', ');
-   }
+import PropTypes from 'prop-types';
+import combineGenreNames from '../../utilities/combineGenrenames';
 
+export default function MovieView({ movie, onBackClick }) {
    return (
       <div className="container">
          <div className="row g-3">
@@ -19,7 +12,7 @@ export default function MovieView({ movie, onBackClick }) {
 
                <div className="row align-items-end mt-1">
                   <div className="col-sm-6 col-12">
-                     <h4 className="m-0">{movie.director.name}</h4>
+                     <h4 className="m-0">{movie.director}</h4>
                   </div>
                   <div className="col-sm-6 col-12 movie-view-genres">
                      <p className="m-0">{combineGenreNames(movie.genres)}</p>
@@ -30,6 +23,7 @@ export default function MovieView({ movie, onBackClick }) {
                   <div className="col">{movie.description}</div>
                </div>
             </div>
+
             <div className="col-sm-6 col-12">
                <img
                   className="movie-poster rounded"
@@ -47,3 +41,20 @@ export default function MovieView({ movie, onBackClick }) {
       </div>
    );
 }
+
+MovieView.propTypes = {
+   movie: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      director: PropTypes.shape({
+         name: PropTypes.string.isRequired,
+      }).isRequired,
+      genres: PropTypes.arrayOf(
+         PropTypes.shape({
+            name: PropTypes.string.isRequired,
+         })
+      ).isRequired,
+      description: PropTypes.string.isRequired,
+      poster: PropTypes.string.isRequired,
+   }).isRequired,
+   onBackClick: PropTypes.func.isRequired,
+};
