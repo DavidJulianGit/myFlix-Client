@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 export default function MovieCard({ movieData, onMovieClick }) {
    function combineGenreNames(genres) {
       return genres.map((genre) => genre.name).join(', ');
@@ -30,3 +32,18 @@ export default function MovieCard({ movieData, onMovieClick }) {
       </div>
    );
 }
+
+MovieCard.propTypes = {
+   movie: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      genres: PropTypes.arrayOf(
+         PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            description: PropTypes.string,
+         })
+      ).isRequired,
+      description: PropTypes.string.isRequired,
+      poster: PropTypes.string.isRequired,
+   }).isRequired,
+   onBackClick: PropTypes.func.isRequired,
+};

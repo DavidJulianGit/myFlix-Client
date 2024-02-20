@@ -47,3 +47,21 @@ export default function MovieView({ movie, onBackClick }) {
       </div>
    );
 }
+
+MovieView.propTypes = {
+   movie: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      director: PropTypes.shape({
+         name: PropTypes.string.isRequired,
+      }).isRequired,
+      genres: PropTypes.arrayOf(
+         PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            description: PropTypes.string,
+         })
+      ).isRequired,
+      description: PropTypes.string.isRequired,
+      poster: PropTypes.string.isRequired,
+   }).isRequired,
+   onBackClick: PropTypes.func.isRequired,
+};
