@@ -2,7 +2,10 @@
 
 ## Description
 
-MyFlix Client is a React application for managing and viewing movies. It provides a user-friendly interface for browsing and selecting movies to watch.
+MyFlix Client is a React application for viewing data of movies.
+Users can register an account and assemble a list of their favorite movies.
+They can also edit their user data and delete their account.
+Layout built with bootstrap, using a theme called Quarz.
 
 ## Features
 
