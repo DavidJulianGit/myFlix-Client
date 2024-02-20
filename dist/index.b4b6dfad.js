@@ -2946,25 +2946,19 @@ var prevRefreshSig = window.$RefreshSig$;
 $parcel$ReactRefreshHelpers$98a3.prelude(module);
 
 try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _client = require("react-dom/client");
+var _mainView = require("./components/main-view/main-view");
+var _mainViewDefault = parcelHelpers.interopDefault(_mainView);
 // Import statement to indicate that you need to bundle `./index.scss`
 var _indexScss = require("./index.scss");
 // Main component (will eventually use all the others)
 const MyFlixApplication = ()=>{
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        className: "my-flix",
-        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-            children: "Good morning"
-        }, void 0, false, {
-            fileName: "src/index.jsx",
-            lineNumber: 10,
-            columnNumber: 16
-        }, undefined)
-    }, void 0, false, {
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _mainViewDefault.default), {}, void 0, false, {
         fileName: "src/index.jsx",
         lineNumber: 9,
-        columnNumber: 11
+        columnNumber: 13
     }, undefined);
 };
 _c = MyFlixApplication;
@@ -2974,7 +2968,7 @@ const root = (0, _client.createRoot)(container);
 // Tells React to render your app in the root DOM element
 root.render(/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(MyFlixApplication, {}, void 0, false, {
     fileName: "src/index.jsx",
-    lineNumber: 20,
+    lineNumber: 17,
     columnNumber: 13
 }, undefined));
 var _c;
@@ -2985,7 +2979,7 @@ $RefreshReg$(_c, "MyFlixApplication");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react-dom/client":"lOjBx","./index.scss":"lJZlQ","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"iTorj":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react-dom/client":"lOjBx","./index.scss":"lJZlQ","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./components/main-view/main-view":"4gflv","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iTorj":[function(require,module,exports) {
 "use strict";
 module.exports = require("ee51401569654d91");
 
@@ -27310,6 +27304,398 @@ function registerExportsForReactRefresh(module1) {
     }
 }
 
-},{"7422ead32dcc1e6b":"786KC"}]},["5qIsR","1xC6H","d8Dch"], "d8Dch", "parcelRequireaec4")
+},{"7422ead32dcc1e6b":"786KC"}],"4gflv":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$f7a6 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$f7a6.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>MainView);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _movieCard = require("../movie-card/movie-card");
+var _movieCardDefault = parcelHelpers.interopDefault(_movieCard);
+var _movieView = require("../movie-view/movie-view");
+var _movieViewDefault = parcelHelpers.interopDefault(_movieView);
+var _movieDBMoviesJson = require("../../../mockData/movieDB.movies.json");
+var _movieDBMoviesJsonDefault = parcelHelpers.interopDefault(_movieDBMoviesJson);
+var _s = $RefreshSig$();
+function MainView() {
+    _s();
+    const [books, setBooks] = (0, _react.useState)([
+        {
+            id: 1,
+            title: "Eloquent JavaScript",
+            image: "https://images-na.ssl-images-amazon.com/images/I/51InjRPaF7L._SX377_BO1,204,203,200_.jpg",
+            author: "Marijn Haverbeke"
+        },
+        {
+            id: 2,
+            title: "Mastering JavaScript Functional Programming",
+            image: "https://images-na.ssl-images-amazon.com/images/I/51WAikRq37L._SX218_BO1,204,203,200_QL40_FMwebp_.jpg",
+            author: "Federico Kereki"
+        },
+        {
+            id: 3,
+            title: "JavaScript: The Good Parts",
+            image: "https://images-na.ssl-images-amazon.com/images/I/5131OWtQRaL._SX381_BO1,204,203,200_.jpg",
+            author: "Douglas Crockford"
+        },
+        {
+            id: 4,
+            title: "JavaScript: The Definitive Guide",
+            image: "https://images-na.ssl-images-amazon.com/images/I/51HbNW6RzhL._SX218_BO1,204,203,200_QL40_FMwebp_.jpg",
+            author: "David Flanagan"
+        },
+        {
+            id: 5,
+            title: "The Road to React",
+            image: "https://images-na.ssl-images-amazon.com/images/I/41MBLi5a4jL._SX384_BO1,204,203,200_.jpg",
+            author: "Robin Wieruch"
+        }
+    ]);
+    const [selectedBook, setSelectedBook] = (0, _react.useState)(null);
+    const [movies, setMovies] = (0, _react.useState)((0, _movieDBMoviesJsonDefault.default));
+    const [selectedMovie, setSelectedMovie] = (0, _react.useState)(null);
+    console.log((0, _movieDBMoviesJsonDefault.default));
+    if (selectedMovie) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieViewDefault.default), {
+        onBackClick: ()=>setSelectedMovie(null),
+        movie: selectedMovie
+    }, void 0, false, {
+        fileName: "src/components/main-view/main-view.jsx",
+        lineNumber: 49,
+        columnNumber: 10
+    }, this);
+    if (movies.length === 0) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        children: "The list is empty!"
+    }, void 0, false, {
+        fileName: "src/components/main-view/main-view.jsx",
+        lineNumber: 57,
+        columnNumber: 14
+    }, this);
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+            className: "container text-center",
+            children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: "row g-5",
+                children: movies.map((movie, index)=>{
+                    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieCardDefault.default), {
+                        movieData: movie,
+                        onMovieClick: (newSelectedMovie)=>setSelectedMovie(newSelectedMovie)
+                    }, index, false, {
+                        fileName: "src/components/main-view/main-view.jsx",
+                        lineNumber: 66,
+                        columnNumber: 22
+                    }, this);
+                })
+            }, void 0, false, {
+                fileName: "src/components/main-view/main-view.jsx",
+                lineNumber: 63,
+                columnNumber: 13
+            }, this)
+        }, void 0, false, {
+            fileName: "src/components/main-view/main-view.jsx",
+            lineNumber: 62,
+            columnNumber: 10
+        }, this)
+    }, void 0, false);
+}
+_s(MainView, "QYphYaNtdG5IQMp9BT2yV4Er9c0=");
+_c = MainView;
+var _c;
+$RefreshReg$(_c, "MainView");
+
+  $parcel$ReactRefreshHelpers$f7a6.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","../../../mockData/movieDB.movies.json":"7oxmx","../movie-card/movie-card":"bwuIu","../movie-view/movie-view":"ggaUx"}],"gkKU3":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, "__esModule", {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === "default" || key === "__esModule" || Object.prototype.hasOwnProperty.call(dest, key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"7oxmx":[function(require,module,exports) {
+module.exports = JSON.parse('[{"_id":{"$oid":"65ba6819f0a3ad2d84e0e919"},"imdbRating":"8.1","imdbVotes":"1,003,301","imdbID":"tt0848228","title":"The Avengers","year":"2012","rated":"PG-13","released":"04 May 2012","runtime":"143 min","director":{"name":"Joss Whedon","bio":"Joss Whedon is a talented filmmaker known for his work in television and film.","birth":"June 23, 1964","death":""},"writer":"Joss Whedon (screenplay), Zak Penn (story), Joss Whedon (story)","actors":"Robert Downey Jr., Chris Evans, Mark Ruffalo, Chris Hemsworth","language":"English, Russian","country":"USA","awards":"Nominated for 1 Oscar. Another 34 wins & 75 nominations.","poster":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2Fmhc5CvIZBN08cytjaZMbncw4v5u.jpg&f=1&nofb=1&ipt=e3af3f7de8d70e0cc5178b52fb16bf8e6cdb52b18b240203252da265254efdf6&ipo=images","metascore":"69","type":"movie","images":["https://images-na.ssl-images-amazon.com/images/M/MV5BMTA0NjY0NzE4OTReQTJeQWpwZ15BbWU3MDczODg2Nzc@._V1_SX1777_CR0,0,1777,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMjE1MzEzMjcyM15BMl5BanBnXkFtZTcwNDM4ODY3Nw@@._V1_SX1777_CR0,0,1777,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMjMwMzM2MTg1M15BMl5BanBnXkFtZTcwNjM4ODY3Nw@@._V1_SX1777_CR0,0,1777,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTQ4NzM2Mjc5MV5BMl5BanBnXkFtZTcwMTkwOTY3Nw@@._V1_SX1777_CR0,0,1777,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTc3MzQ3NjA5N15BMl5BanBnXkFtZTcwMzY5OTY3Nw@@._V1_SX1777_CR0,0,1777,999_AL_.jpg"],"description":"Earth\'s mightiest heroes must come together and learn to fight as a team if they are to stop the mischievous Loki and his alien army from enslaving humanity.","genres":[{"name":"Action","description":"Prepare for heart-pounding excitement!"},{"name":"Sci-Fi","description":"Dive into the wonders of the future!"},{"name":"Thriller","description":"Get ready for suspense and tension!"}]},{"_id":{"$oid":"65ba6819f0a3ad2d84e0e912"},"imdbRating":"7.9","imdbVotes":"890,617","imdbID":"tt0499549","title":"Avatar","year":"2009","rated":"PG-13","released":"18 Dec 2009","runtime":"162 min","director":{"name":"James Cameron","bio":"James Cameron is a visionary director known for his groundbreaking work in the film industry.","birth":"August 16, 1954","death":""},"writer":"James Cameron","actors":"Sam Worthington, Zoe Saldana, Sigourney Weaver, Stephen Lang","language":"English, Spanish","country":"USA, UK","awards":"Won 3 Oscars. Another 80 wins & 121 nominations.","poster":"https://image.tmdb.org/t/p/original/jRXYjXNq0Cs2TcJjLkki24MLp7u.jpg","metascore":"83","type":"movie","images":["https://images-na.ssl-images-amazon.com/images/M/MV5BMjEyOTYyMzUxNl5BMl5BanBnXkFtZTcwNTg0MTUzNA@@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BNzM2MDk3MTcyMV5BMl5BanBnXkFtZTYwMDA0Nzc4._V1_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTY2ODQ3NjMyMl5BMl5BanBnXkFtZTcwODg0MTUzNA@@._V1_SX1777_CR0,0,1777,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTMxOTEwNDcxN15BMl5BanBnXkFtZTcwOTg0MTUzNA@@._V1_SX1777_CR0,0,1777,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTYxMDg1Nzk1MV5BMl5BanBnXkFtZTcwMDk0MTUzNA@@._V1_SX1500_CR0,0,1500,999_AL_.jpg"],"description":"A paraplegic marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home..","genres":[{"name":"Action","description":"Prepare for heart-pounding excitement!"},{"name":"Adventure","description":"Embark on a thrilling journey!"},{"name":"Fantasy","description":"Enter a world of magic and wonder!"}]},{"_id":{"$oid":"65ba6819f0a3ad2d84e0e91b"},"imdbRating":"N/A","imdbVotes":"N/A","imdbID":"tt1211837","title":"Doctor Strange","year":"2016","rated":"N/A","released":"04 Nov 2016","runtime":"N/A","director":{"name":"Scott Derrickson","bio":"Scott Derrickson is a talented filmmaker known for his work in the horror and fantasy genres.","birth":"July 16, 1966","death":""},"writer":"Scott Derrickson (screenplay), C. Robert Cargill (screenplay), Jon Spaihts (story by), Scott Derrickson (story by), C. Robert Cargill (story by), Steve Ditko (comic book)","actors":"Rachel McAdams, Benedict Cumberbatch, Mads Mikkelsen, Tilda Swinton","language":"English","country":"USA","awards":"N/A","poster":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpicfiles.alphacoders.com%2F127%2F127252.jpg&f=1&nofb=1&ipt=68769c702727d1cb5854adc8d484861580fbf95cc65acbaae4ad1daca4a4d5f2&ipo=images","metascore":"N/A","type":"movie","images":["https://images-na.ssl-images-amazon.com/images/M/MV5BMjM3ODc1ODI5Ml5BMl5BanBnXkFtZTgwODMzMDY3OTE@._V1_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTgxNTAyNTU0NV5BMl5BanBnXkFtZTgwNzMzMDY3OTE@._V1_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMjE5NDc5NzUwNV5BMl5BanBnXkFtZTgwMDM3MDM2NzE@._V1_.jpg"],"description":"After his career is destroyed, a brilliant but arrogant and conceited surgeon gets a new lease on life when a sorcerer takes him under her wing and trains him to defend the world against evil.","genres":[{"name":"Action","description":"Prepare for heart-pounding excitement!"},{"name":"Adventure","description":"Embark on a thrilling journey!"},{"name":"Fantasy","description":"Enter a world of magic and wonder!"}]},{"_id":{"$oid":"65ba6819f0a3ad2d84e0e915"},"imdbRating":"9.0","imdbVotes":"2,339,829","imdbID":"tt0468569","title":"The Dark Knight","year":"2008","rated":"PG-13","released":"18 Jul 2008","runtime":"152 min","director":{"name":"Christopher Nolan","bio":"James Cameron is a visionary director known for his groundbreaking work in the film industry. He has directed several critically acclaimed and commercially successful films.","birth":"July 30, 1970","death":""},"writer":"Jonathan Nolan (screenplay), Christopher Nolan (screenplay), Christopher Nolan (story), David S. Goyer (story), Bob Kane (characters)","actors":"Christian Bale, Heath Ledger, Aaron Eckhart, Michael Caine","language":"English, Mandarin","country":"USA, UK","awards":"Won 2 Oscars. Another 154 wins & 155 nominations.","poster":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.themoviedb.org%2Ft%2Fp%2Foriginal%2F2Ka2nOtSlwuFlsHtrtfHKMIjldC.jpg&f=1&nofb=1&ipt=0161f0f5239ebb22e8de63ee42e6a094862d73d560740118407a440c5ae3bde1&ipo=images","metascore":"82","type":"movie","images":["https://images-na.ssl-images-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMzkzMzQ4NzM5M15BMl5BanBnXkFtZTcwODA4NzE1NA@@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTY5MTY4NjU1NV5BMl5BanBnXkFtZTcwMTQ5NjUyMQ@@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTQwMTM2MzU1Ml5BMl5BanBnXkFtZTcwNTUxMTcyMQ@@._V1_SX1500_CR0,0,1500,999_AL_.jpg"],"description":"When the menace known as The Joker emerges from his mysterious past, he wreaks havoc and chaos on the people of Gotham. The Dark Knight must accept one of the greatest psychological and physical tests of his ability to fight injustice.","genres":[{"name":"Action","description":"Prepare for heart-pounding excitement!"},{"name":"Crime","description":"Dive into the world of deception and corruption!"},{"name":"Drama","description":"Prepare for intense emotional depth!"}]},{"_id":{"$oid":"65ba6819f0a3ad2d84e0e91a"},"imdbRating":"8.2","imdbVotes":"786,985","imdbID":"tt0993846","title":"The Wolf of Wall Street","year":"2013","rated":"R","released":"25 Dec 2013","runtime":"180 min","director":{"name":"Martin Scorsese","bio":"Martin Scorsese is an iconic director known for his gritty and realistic portrayals of human nature.","birth":"November 17, 1942","death":""},"writer":"Terence Winter (screenplay), Jordan Belfort (book)","actors":"Leonardo DiCaprio, Jonah Hill, Margot Robbie, Matthew McConaughey","language":"English, French","country":"USA","awards":"Nominated for 5 Oscars. Another 35 wins & 154 nominations.","poster":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fhwg3pXw2m4HfRGbyRMIP8laf5Lf.jpg&f=1&nofb=1&ipt=f38df7a65fef9f6eb4f71e027f172081caa24a118dbe87a0a6c4e33d79d86e67&ipo=images","metascore":"75","type":"movie","images":["https://images-na.ssl-images-amazon.com/images/M/MV5BNDIwMDIxNzk3Ml5BMl5BanBnXkFtZTgwMTg0MzQ4MDE@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTc0NzAxODAyMl5BMl5BanBnXkFtZTgwMDg0MzQ4MDE@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTExMDk1MDE4NzVeQTJeQWpwZ15BbWU4MDM4NDM0ODAx._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTg3MTY4NDk4Nl5BMl5BanBnXkFtZTgwNjc0MzQ4MDE@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTgzMTg4MDI0Ml5BMl5BanBnXkFtZTgwOTY0MzQ4MDE@._V1_SY1000_CR0,0,1553,1000_AL_.jpg"],"description":"Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.","genres":[{"name":"Biography","description":"Experience a true-life tale!"},{"name":"Comedy","description":"Prepare to laugh out loud!"},{"name":"Crime","description":"Dive into the world of deception and corruption!"}]},{"_id":{"$oid":"65ba6819f0a3ad2d84e0e914"},"imdbRating":"7.6","imdbVotes":"702,060","imdbID":"tt0416449","title":"300","year":"2006","rated":"R","released":"09 Mar 2007","runtime":"117 min","director":{"name":"Zack Snyder","bio":"Zack Snyder is a visionary director known for his visually stunning films.","birth":"March 1, 1966","death":""},"writer":"Zack Snyder (screenplay), Kurt Johnstad (screenplay), Michael Gordon (screenplay), Frank Miller (graphic novel), Lynn Varley (graphic novel)","actors":"Gerard Butler, Lena Headey, Dominic West, David Wenham","language":"English","country":"USA","awards":"16 wins & 42 nominations.","poster":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.themoviedb.org%2Ft%2Fp%2Foriginal%2F1Gu1IzSzlqvFuoVEfHqzQxRPOGi.jpg&f=1&nofb=1&ipt=aeee65ede7b3956874611abd0daf50b0c4594a7d4febd37300cfa8581bc81eb7&ipo=images","metascore":"52","type":"movie","images":["https://images-na.ssl-images-amazon.com/images/M/MV5BMjEyNTA0NDAwOF5BMl5BanBnXkFtZTcwOTIwMTk3MQ@@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMjExNjY2OTQzN15BMl5BanBnXkFtZTcwNjYwMTk3MQ@@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTMxMTI5OTI5OF5BMl5BanBnXkFtZTcwOTg4MTk3MQ@@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMjA3NDQzNDczMl5BMl5BanBnXkFtZTcwODk3Nzk3MQ@@._V1_SX1500_CR0,0,1500,999_AL_.jpg"],"description":"King Leonidas of Sparta and a force of 300 men fight the Persians at Thermopylae in 480 B.C.","genres":[{"name":"Action","description":"Prepare for heart-pounding excitement!"},{"name":"Drama","description":"Prepare for intense emotional depth!"},{"name":"Fantasy","description":"Enter a world of magic and wonder!"}]},{"_id":{"$oid":"65ba6819f0a3ad2d84e0e917"},"imdbRating":"8.6","imdbVotes":"1,651,803","imdbID":"tt0816692","title":"Interstellar","year":"2014","rated":"PG-13","released":"07 Nov 2014","runtime":"169 min","director":{"name":"Christopher Nolan","bio":"Christopher Nolan is a master filmmaker known for his mind-bending narratives.","birth":"July 30, 1970","death":""},"writer":"Jonathan Nolan, Christopher Nolan","actors":"Matthew McConaughey, Anne Hathaway, Jessica Chastain, Mackenzie Foy","language":"English","country":"USA, UK, Canada","awards":"Won 1 Oscar. Another 43 wins & 148 nominations.","poster":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpicfiles.alphacoders.com%2F349%2F349599.jpg&f=1&nofb=1&ipt=5614669ab7ba1c023d024de9c1bf46403902f66c7fb5d0565132cdc1713f6fe0&ipo=images","metascore":"74","type":"movie","images":["https://images-na.ssl-images-amazon.com/images/M/MV5BMjE0MDY1ODI1OV5BMl5BanBnXkFtZTgwODcxNTA0NTE@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTU4MTU4MDU5OF5BMl5BanBnXkFtZTgwMTA1MjU0MDE@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTU4NzgzMTExNV5BMl5BanBnXkFtZTgwMzI0MjY5MDE@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTQ1NDM3ODI0OV5BMl5BanBnXkFtZTgwMzUyNjE4MTE@._V1_SX1500_CR0,0,1500,999_AL_.jpg"],"description":"A team of explorers travel through a wormhole in space in an attempt to ensure humanity\'s survival.","genres":[{"name":"Adventure","description":"Embark on a thrilling journey!"},{"name":"Drama","description":"Prepare for intense emotional depth!"},{"name":"Sci-Fi","description":"Dive into the wonders of the future!"}]},{"_id":{"$oid":"65ba6819f0a3ad2d84e0e913"},"imdbRating":"7.2","imdbVotes":"533,874","imdbID":"tt0480249","title":"I Am Legend","year":"2007","rated":"PG-13","released":"14 Dec 2007","runtime":"101 min","director":{"name":"Francis Lawrence","bio":"Francis Lawrence is a skilled director known for his captivating storytelling.","birth":"March 26, 1971","death":""},"writer":"Mark Protosevich (screenplay), Akiva Goldsman (screenplay), Richard Matheson (novel), John William Corrington, Joyce Hooper Corrington","actors":"Will Smith, Alice Braga, Charlie Tahan, Salli Richardson-Whitfield","language":"English","country":"USA","awards":"9 wins & 21 nominations.","poster":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2Ffhbiz5BsGUVEZmzPP72SoPlbMz0.jpg&f=1&nofb=1&ipt=1dffc69f814c71a82efb1cce1c47397c449dbbfb0bbb6381e7c50b61f5fbc91d&ipo=images","metascore":"65","type":"movie","images":["https://images-na.ssl-images-amazon.com/images/M/MV5BMTI0NTI4NjE3NV5BMl5BanBnXkFtZTYwMDA0Nzc4._V1_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTIwMDg2MDU4M15BMl5BanBnXkFtZTYwMTA0Nzc4._V1_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTc5MDM1OTU5OV5BMl5BanBnXkFtZTYwMjA0Nzc4._V1_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTA0MTI2NjMzMzFeQTJeQWpwZ15BbWU2MDMwNDc3OA@@._V1_SX1500_CR0,0,1500,999_AL_.jpg"],"description":"Years after a plague kills most of humanity and transforms the rest into monsters, the sole survivor in New York City struggles valiantly to find a cure.","genres":[{"name":"Drama","description":"Prepare for intense emotional depth!"},{"name":"Horror","description":"Get ready to be scared!"},{"name":"Sci-Fi","description":"Dive into the wonders of the future!"}]},{"_id":{"$oid":"65ba6819f0a3ad2d84e0e916"},"imdbRating":"8.8","imdbVotes":"2,217,041","imdbID":"tt1375666","title":"Inception","year":"2010","rated":"PG-13","released":"16 Jul 2010","runtime":"148 min","director":{"name":"Christopher Nolan","bio":"Christopher Nolan is a master filmmaker known for his mind-bending narratives.","birth":"July 30, 1970","death":""},"writer":"Christopher Nolan","actors":"Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page, Tom Hardy","language":"English, Japanese, French","country":"USA, UK","awards":"Won 4 Oscars. Another 152 wins & 217 nominations.","poster":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2F9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg&f=1&nofb=1&ipt=23b76bad0ac00851025ffd38e8480c256ad21b3f1138884c08258d77b20a2d13&ipo=images","metascore":"74","type":"movie","images":["https://images-na.ssl-images-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMzkzMzQ4NzM5M15BMl5BanBnXkFtZTcwODA4NzE1NA@@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMzkzMzQ4NzM5M15BMl5BanBnXkFtZTcwODA4NzE1NA@@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX1500_CR0,0,1500,999_AL_.jpg"],"description":"A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.","genres":[{"name":"Action","description":"Prepare for heart-pounding excitement!"},{"name":"Adventure","description":"Embark on a thrilling journey!"},{"name":"Sci-Fi","description":"Dive into the wonders of the future!"}]},{"_id":{"$oid":"65ba6819f0a3ad2d84e0e918"},"imdbRating":"7.8","imdbVotes":"594,587","imdbID":"tt5013056","title":"Dunkirk","year":"2017","rated":"PG-13","released":"21 Jul 2017","runtime":"106 min","director":{"name":"Christopher Nolan","bio":"Christopher Nolan is a master filmmaker known for his mind-bending narratives.","birth":"July 30, 1970","death":""},"writer":"Christopher Nolan","actors":"Fionn Whitehead, Barry Keoghan, Mark Rylance, Tom Hardy","language":"English, French, German","country":"UK, Netherlands, France, USA","awards":"Won 3 Oscars. Another 52 wins & 202 nominations.","poster":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.themoviedb.org%2Ft%2Fp%2Foriginal%2FpcVC6wvEVodaUxkTsUkXlgVrXHF.jpg&f=1&nofb=1&ipt=3ca711dd454ae010f12abb3d15f45dfecc46f2b9286b94da24a8432efd45cfd8&ipo=images","metascore":"94","type":"movie","images":["https://images-na.ssl-images-amazon.com/images/M/MV5BMjQ0MTYzNjEwNl5BMl5BanBnXkFtZTgwNzIyMTU0NzI@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMjY2MzMwMTQwNl5BMl5BanBnXkFtZTgwNjY2NzE4NDM@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BMjgwMzExMDUyN15BMl5BanBnXkFtZTgwMjU1MTU0NzI@._V1_SX1500_CR0,0,1500,999_AL_.jpg","https://images-na.ssl-images-amazon.com/images/M/MV5BN2YyZjEwNzgtYTIwMi00MTd1LWEzNDYtMDk5NzFmYzRlZDViXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX1500_CR0,0,1500,999_AL_.jpg"],"description":"Allied soldiers from Belgium, the British Empire, and France are surrounded by the German Army and evacuated during a fierce battle in World War II.","genres":[{"name":"Action","description":"Prepare for heart-pounding excitement!"},{"name":"Drama","description":"Prepare for intense emotional depth!"},{"name":"History","description":"Experience the past come to life!"}]}]');
+
+},{}],"bwuIu":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$67b2 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$67b2.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>MovieCard);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+function MovieCard({ movieData, onMovieClick }) {
+    function combineGenreNames(genres) {
+        return genres.map((genre)=>genre.name).join(", ");
+    }
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        className: "col-lg-4 col-md-6 col-12 mb-3",
+        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+            className: "card h-100 p-0 text-start",
+            children: [
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
+                    onClick: ()=>onMovieClick(movieData),
+                    src: movieData.poster,
+                    className: "card-img-top",
+                    alt: `Movie poster of ${movieData.title}`
+                }, void 0, false, {
+                    fileName: "src/components/movie-card/movie-card.jsx",
+                    lineNumber: 8,
+                    columnNumber: 13
+                }, this),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                    className: "card-body",
+                    children: [
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
+                            className: "card-title",
+                            onClick: ()=>onMovieClick(movieData),
+                            children: movieData.title
+                        }, void 0, false, {
+                            fileName: "src/components/movie-card/movie-card.jsx",
+                            lineNumber: 15,
+                            columnNumber: 16
+                        }, this),
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                            className: "card-text overflow-hidden",
+                            children: movieData.description
+                        }, void 0, false, {
+                            fileName: "src/components/movie-card/movie-card.jsx",
+                            lineNumber: 20,
+                            columnNumber: 16
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "src/components/movie-card/movie-card.jsx",
+                    lineNumber: 14,
+                    columnNumber: 13
+                }, this),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                    className: "m-3",
+                    children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                        className: "card-text text-end",
+                        children: combineGenreNames(movieData.genres)
+                    }, void 0, false, {
+                        fileName: "src/components/movie-card/movie-card.jsx",
+                        lineNumber: 25,
+                        columnNumber: 16
+                    }, this)
+                }, void 0, false, {
+                    fileName: "src/components/movie-card/movie-card.jsx",
+                    lineNumber: 24,
+                    columnNumber: 13
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "src/components/movie-card/movie-card.jsx",
+            lineNumber: 7,
+            columnNumber: 10
+        }, this)
+    }, void 0, false, {
+        fileName: "src/components/movie-card/movie-card.jsx",
+        lineNumber: 6,
+        columnNumber: 7
+    }, this);
+}
+_c = MovieCard;
+var _c;
+$RefreshReg$(_c, "MovieCard");
+
+  $parcel$ReactRefreshHelpers$67b2.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"ggaUx":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$e9f6 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$e9f6.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>MovieView);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _s = $RefreshSig$();
+function MovieView({ movie, onBackClick }) {
+    _s();
+    (0, _react.useEffect)(()=>{
+        window.addEventListener("popstate", onBackClick);
+        return ()=>{
+            window.removeEventListener("popstate", onBackClick);
+        };
+    }, []);
+    function combineGenreNames(genres) {
+        return genres.map((genre)=>genre.name).join(", ");
+    }
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        className: "container",
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: "row g-3",
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        className: "col-sm-6 col-12 pe-5",
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                className: "row",
+                                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h1", {
+                                    children: movie.title
+                                }, void 0, false, {
+                                    fileName: "src/components/movie-view/movie-view.jsx",
+                                    lineNumber: 21,
+                                    columnNumber: 19
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "src/components/movie-view/movie-view.jsx",
+                                lineNumber: 20,
+                                columnNumber: 16
+                            }, this),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                className: "row align-items-end mt-1",
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                        className: "col-sm-6 col-12",
+                                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
+                                            className: "m-0",
+                                            children: movie.director.name
+                                        }, void 0, false, {
+                                            fileName: "src/components/movie-view/movie-view.jsx",
+                                            lineNumber: 26,
+                                            columnNumber: 22
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "src/components/movie-view/movie-view.jsx",
+                                        lineNumber: 25,
+                                        columnNumber: 19
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                        className: "col-sm-6 col-12 movie-view-genres",
+                                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                                            className: "m-0",
+                                            children: combineGenreNames(movie.genres)
+                                        }, void 0, false, {
+                                            fileName: "src/components/movie-view/movie-view.jsx",
+                                            lineNumber: 29,
+                                            columnNumber: 22
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "src/components/movie-view/movie-view.jsx",
+                                        lineNumber: 28,
+                                        columnNumber: 19
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/components/movie-view/movie-view.jsx",
+                                lineNumber: 24,
+                                columnNumber: 16
+                            }, this),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                className: "row mt-5",
+                                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                    className: "col",
+                                    children: movie.description
+                                }, void 0, false, {
+                                    fileName: "src/components/movie-view/movie-view.jsx",
+                                    lineNumber: 34,
+                                    columnNumber: 19
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "src/components/movie-view/movie-view.jsx",
+                                lineNumber: 33,
+                                columnNumber: 16
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/components/movie-view/movie-view.jsx",
+                        lineNumber: 19,
+                        columnNumber: 13
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        className: "col-sm-6 col-12",
+                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
+                            className: "movie-poster rounded",
+                            src: movie.poster,
+                            alt: `Movie poster of ${movie.title}`
+                        }, void 0, false, {
+                            fileName: "src/components/movie-view/movie-view.jsx",
+                            lineNumber: 38,
+                            columnNumber: 16
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "src/components/movie-view/movie-view.jsx",
+                        lineNumber: 37,
+                        columnNumber: 13
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "src/components/movie-view/movie-view.jsx",
+                lineNumber: 18,
+                columnNumber: 10
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                type: "button",
+                className: "btn btn-warning",
+                onClick: onBackClick,
+                children: "Back"
+            }, void 0, false, {
+                fileName: "src/components/movie-view/movie-view.jsx",
+                lineNumber: 45,
+                columnNumber: 10
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "src/components/movie-view/movie-view.jsx",
+        lineNumber: 17,
+        columnNumber: 7
+    }, this);
+}
+_s(MovieView, "OD7bBpZva5O2jO+Puf00hKivP7c=");
+_c = MovieView;
+var _c;
+$RefreshReg$(_c, "MovieView");
+
+  $parcel$ReactRefreshHelpers$e9f6.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","react":"21dqq"}]},["5qIsR","1xC6H","d8Dch"], "d8Dch", "parcelRequireaec4")
 
 //# sourceMappingURL=index.b4b6dfad.js.map

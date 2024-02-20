@@ -1,5 +1,43 @@
 $color: steelblue;
+body {
+   padding-top: 150px;
+}
 
-.my-flix {
-     color: $color;
+.movie-poster {
+   max-width: 500px;
+}
+
+.card {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   width: 100%;
+}
+.card-img-top {
+   flex: 1;
+}
+.card-body {
+   flex: 0;
+}
+.card-title {
+   height: 2rem;
+}
+.card-text {
+   overflow: hidden;
+   display: -webkit-box;
+   -webkit-line-clamp: 7; /* Limit the number of lines to display */
+   -webkit-box-orient: vertical;
+   text-overflow: ellipsis;
+   white-space: normal;
+}
+
+.movie-view-genres {
+   display: flex;
+   flex-direction: row;
+   justify-content: flex-end;
+   align-items: flex-end;
+}
+.card-img-top,
+.card-title {
+   cursor: pointer;
 }

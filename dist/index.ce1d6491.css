@@ -1,5 +1,48 @@
-.my-flix {
-  color: #4682b4;
+body {
+  padding-top: 150px;
+}
+
+.movie-poster {
+  max-width: 500px;
+}
+
+.card {
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  display: flex;
+}
+
+.card-img-top {
+  flex: 1;
+}
+
+.card-body {
+  flex: 0;
+}
+
+.card-title {
+  height: 2rem;
+}
+
+.card-text {
+  -webkit-line-clamp: 7;
+  text-overflow: ellipsis;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+}
+
+.movie-view-genres {
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  display: flex;
+}
+
+.card-img-top, .card-title {
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=index.ce1d6491.css.map */
