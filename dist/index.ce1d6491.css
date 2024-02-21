@@ -1,9 +1,12 @@
 body {
   padding-top: 150px;
+  padding-left: 3rem;
+  padding-right: 3rem;
 }
 
 .movie-poster {
-  max-width: 500px;
+  width: 100%;
+  max-width: 400px;
 }
 
 .card {
