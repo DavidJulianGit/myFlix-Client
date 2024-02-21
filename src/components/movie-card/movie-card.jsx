@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import combineGenreNames from '../../utilities/combineGenrenames';
+import combineGenreNames from '../../utilities/combineGenreNames';
 
 export default function MovieCard({ movieData, onMovieClick }) {
    return (
@@ -43,5 +43,5 @@ MovieCard.propTypes = {
       description: PropTypes.string.isRequired,
       poster: PropTypes.string.isRequired,
    }).isRequired,
-   onBackClick: PropTypes.func.isRequired,
+   onMovieClick: PropTypes.func,
 };
