@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import NavigationBar from './components/nagivation-bar/navigation-bar';
 import MainView from './components/main-view/main-view';
+import { Container } from 'react-bootstrap';
 
 // Styles
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,8 +10,10 @@ import './index.scss';
 const App = () => {
    return (
       <>
-         <NavigationBar />
-         <MainView />
+         <Container>
+            <NavigationBar />
+            <MainView />
+         </Container>
       </>
    );
 };
