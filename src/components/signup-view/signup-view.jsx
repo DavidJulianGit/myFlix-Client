@@ -116,6 +116,7 @@ export default function SignupView({ onLoggedIn }) {
                                  email: e.target.value,
                               }))
                            }
+
                            required
                         />
                      </FloatingLabel>
@@ -160,12 +161,13 @@ export default function SignupView({ onLoggedIn }) {
                                  birthday: e.target.value,
                               }));
                            }}
+
                            required
                         />
                      </FloatingLabel>
                   </Form.Group>
 
-                  <Button variant="warning" type="submit" className="mt-2">
+                  <Button type="submit" className="mt-2">
                      Sign Up
                   </Button>
                </Form>

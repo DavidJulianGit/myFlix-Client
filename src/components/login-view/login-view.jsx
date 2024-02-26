@@ -38,9 +38,11 @@ export default function LoginView({ onLoggedIn }) {
          .then((response) => response.json())
          .then((data) => {
             if (data.user) {
+
                localStorage.setItem('user', JSON.stringify(data.user));
                localStorage.setItem('token', data.token);
                onLoggedIn(data.user, data.token);
+
             } else {
                alert('No such user');
             }
@@ -98,7 +100,7 @@ export default function LoginView({ onLoggedIn }) {
                      </FloatingLabel>
                   </Form.Group>
 
-                  <Button variant="warning" type="submit" className="mt-2">
+                  <Button type="submit" className="mt-2">
                      Login
                   </Button>
                </Form>

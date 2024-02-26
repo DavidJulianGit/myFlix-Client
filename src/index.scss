@@ -1,59 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+* {
+	font-family: 'Inter', sans-serif;
+}
 body {
-   padding-top: 150px;
-   padding-left: 3rem;
-   padding-right: 3rem;
+	padding-top: 120px;
+	padding-left: 3rem;
+	padding-right: 3rem;
+}
+p {
+	font-weight: 300;
 }
 
+.link {
+	text-decoration: none;
+}
 .movie-poster {
-   width: 100%;
-   max-width: 400px;
+	width: 100%;
+	max-width: 400px;
 }
 
 .card {
-   display: flex;
-   flex-direction: column;
-   justify-content: space-between;
-   width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 100%;
 }
 .card-img-top {
-   flex: 1;
+	flex: 1;
 }
 .card-body {
-   flex: 0;
+	flex: 0;
 }
 .card-title {
-   height: 2rem;
+	height: 2rem;
 }
 .card-text {
-   overflow: hidden;
-   display: -webkit-box;
-   -webkit-line-clamp: 7; /* Limit the number of lines to display */
-   -webkit-box-orient: vertical;
-   height: 3lh;
-   text-overflow: ellipsis;
-   white-space: normal;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 7; /* Limit the number of lines to display */
+	-webkit-box-orient: vertical;
+	height: 5lh;
+	text-overflow: ellipsis;
+	white-space: normal;
 }
-
+.movie-view {
+	max-width: 100px;
+	width: 100%;
+}
 .movie-view-genres {
-   display: flex;
-   flex-direction: row;
-   justify-content: flex-end;
-   align-items: flex-end;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: flex-end;
 }
 .card-img-top,
 .card-title {
-   cursor: pointer;
+	cursor: pointer;
 }
 
 .login-form {
-   max-width: 400px;
-   min-width: 300px;
-   width: 100%;
-   margin: 0 auto;
+	max-width: 400px;
+	min-width: 300px;
+	width: 100%;
+	margin: 0 auto;
 }
 .small-text {
-   font-size: 0.75rem; /* Adjust as needed */
+	font-size: 0.75rem;
 }
 .h-100 {
-   height: 100%;
+	height: 100%;
+}
+.nav-link-logout {
+	margin-left: auto;
 }

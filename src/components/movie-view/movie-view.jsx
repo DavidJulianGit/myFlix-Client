@@ -1,27 +1,33 @@
 import React from 'react';
-import { Container, Row, Col, Button, Image } from 'react-bootstrap';
+import { Container, Row, Col, Button, Image, } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-import combineGenreNames from '../../utilities/combineGenreNames';
 
-export default function MovieView({ movie, onBackClick }) {
+import combineGenreNames from '../../utilities/combineGenreNames';
+import { useParams } from 'react-router';
+
+export default function MovieView({ movies }) {
+
+   const { movieId } = useParams();
+   const movie = movies.find(m => m.title === movieId);
+
    return (
-      <Container>
+      <Container className='col-xl-10 col-l-11'>
          <Row>
             <Col md={6} className="p-3">
                <h1>{movie.title}</h1>
-               <Container className="d-lg-flex flex-lg-row flex-column justify-content-between p-0">
-                  <div className="item">
-                     <h4 className="mb-0">{movie.director}</h4>
-                  </div>
-                  <div className="item">
-                     <p className="mb-0">{combineGenreNames(movie.genres)}</p>
-                  </div>
+               <Container >
+                  <Row className="d-sm-flex flex-sm-row flex-column justify-content-between align-items-end p-0 mb-2">
+                     <Col className='p-0'>
+                        <h4 className="mb-0">{movie.director}</h4>
+                     </Col>
+                     <Col className='p-0 text-nowrap text-sm-end '>
+                        <p className="mb-0">{combineGenreNames(movie.genres)}</p>
+                     </Col>
+                  </Row>
                </Container>
-               <p className="my-5">{movie.description}</p>
-               <Button variant="warning" onClick={onBackClick}>
-                  Back
-               </Button>
+               <hr className='my-0'></hr>
+               <p className="my-sm-2">{movie.description}</p>
             </Col>
             <Col
                md={6}
@@ -38,7 +44,8 @@ export default function MovieView({ movie, onBackClick }) {
 }
 
 MovieView.propTypes = {
-   movie: PropTypes.shape({
+   movies: PropTypes.shape({
+      id: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       director: PropTypes.string.isRequired,
       genres: PropTypes.arrayOf(
@@ -49,5 +56,4 @@ MovieView.propTypes = {
       description: PropTypes.string.isRequired,
       poster: PropTypes.string.isRequired,
    }).isRequired,
-   onBackClick: PropTypes.func.isRequired,
 };
