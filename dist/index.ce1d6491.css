@@ -4,9 +4,7 @@
 }
 
 body {
-  padding-top: 120px;
-  padding-left: 3rem;
-  padding-right: 3rem;
+  padding: 120px 3rem 3rem;
 }
 
 p {
@@ -70,7 +68,7 @@ p {
 .login-form {
   width: 100%;
   min-width: 300px;
-  max-width: 400px;
+  max-width: 500px;
   margin: 0 auto;
 }
 

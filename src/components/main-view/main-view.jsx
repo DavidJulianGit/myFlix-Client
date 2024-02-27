@@ -8,6 +8,7 @@ import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
 import SignupView from '../signup-view/signup-view';
 import NavigationBar from '../nagivation-bar/navigation-bar';
+import ProfileView from '../profile-view/profile-view';
 
 export default function MainView() {
    // Local Storage
@@ -45,7 +46,7 @@ export default function MainView() {
                   description: movie.description,
                };
             });
-            console.log(moviesFromApi);
+
             setMovies(moviesFromApi);
          });
    }, [token]);
@@ -59,6 +60,26 @@ export default function MainView() {
       setToken(null);
    };
 
+   // Update the user's favorite movies list
+   const updateUserFavoriteMovies = (updatedUser) => {
+      setUser(updatedUser); // Assuming the updatedUser object includes the updated list of favorite movies
+      localStorage.setItem('user', JSON.stringify(updatedUser)); // Update local storage
+   };
+
+   const movieCards = movies.map(movie => {
+      return <MovieCard
+         JWT={token}
+         user={user}
+         key={movie.id}
+         movie={movie}
+         updateFavorites={updateUserFavoriteMovies}
+      />;
+   })
+
+   let favoriteMovies = user && user.favoriteMovies ? movies.filter(m => user.favoriteMovies.includes(m.id)) : [];
+   const favoriteMovieCards = favoriteMovies.map(movie => {
+      return <MovieCard JWT={token} user={user} key={movie.id} movie={movie} updateFavorites={updateUserFavoriteMovies} />;
+   })
 
    return (
       <BrowserRouter>
@@ -82,14 +103,10 @@ export default function MainView() {
                      !user ? <Navigate to="/login" replace /> :
                         movies.length === 0 ?
                            <Col><h2 className="my-4">No movies to display!</h2></Col> :
-                           <>
-                              <Row className="g-4">
-                                 {movies.map(movie => {
-                                    return <MovieCard key={movie.id} movie={movie} />;
-                                 })}
-                              </Row>
-
-                           </>}
+                           <Row className="g-4">
+                              {movieCards}
+                           </Row>
+                  }
                />
 
                <Route
@@ -97,10 +114,42 @@ export default function MainView() {
                   element={!user ? <Navigate to="/login" replace /> : movies.length === 0 ? <Col>No movies to display!</Col> :
                      <MovieView movies={movies} />}
                />
+
                <Route
                   path="/"
                   element={user ? <Navigate to="/movies" replace /> :
-                     <Navigate to="/login" replace />} />
+                     <Navigate to="/login" replace />}
+               />
+
+               <Route path='/profile'
+                  element={
+                     user ?
+                        <>
+                           <Container className="mt-5">
+                              <Row>
+                                 <Col className=''>
+                                    <h2 className='mb-4'>My Favorite Movies</h2>
+                                 </Col>
+                              </Row>
+                              <Row className="g-4">
+                                 {favoriteMovieCards}
+                              </Row>
+                           </Container>
+                           <hr></hr>
+                           <ProfileView
+                              movies={movies}
+                              userData={user}
+                              JWT={token}
+                              onLoggedIn={(user, token) => {
+                                 setUser(user);
+                              }}
+                              handleLogout={handleLogout}
+                           />
+                        </>
+                        : <Navigate to="/login" replace />
+                  }
+               />
+
             </Routes>
          </Container>
       </BrowserRouter>

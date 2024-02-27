@@ -5,7 +5,8 @@ import {
    Col,
    Form,
    Button,
-   FloatingLabel,
+   InputGroup,
+   Modal
 } from 'react-bootstrap';
 import { useState } from 'react';
 
@@ -14,21 +15,29 @@ export default function LoginView({ onLoggedIn }) {
       email: '',
       password: '',
    });
-   const LoginURL = 'https://myflix-z30i.onrender.com/login';
+   const [passwordShown, setPasswordShown] = useState(false);
+   const [showModal, setShowModal] = useState(false);
+   const [modalMessage, setModalMessage] = useState('');
+
+   const togglePasswordVisibility = () => {
+      setPasswordShown(!passwordShown);
+   }
+
 
    const handleSubmit = (event) => {
       event.preventDefault();
-
-      const data = {
-         email: userData.email,
-         password: userData.password,
-      };
 
       const headers = {
          'Content-Type': 'application/json',
          Host: 'myflix-z30i.onrender.com',
       };
-      console.log(JSON.stringify(data));
+
+      const data = {
+         email: userData.email,
+         password: userData.password
+      }
+
+      const LoginURL = 'https://myflix-z30i.onrender.com/login';
 
       fetch(LoginURL, {
          method: 'POST',
@@ -38,17 +47,17 @@ export default function LoginView({ onLoggedIn }) {
          .then((response) => response.json())
          .then((data) => {
             if (data.user) {
-
                localStorage.setItem('user', JSON.stringify(data.user));
                localStorage.setItem('token', data.token);
                onLoggedIn(data.user, data.token);
-
             } else {
-               alert('No such user');
+               setModalMessage(data.message.message);
+               setShowModal(true);
             }
          })
          .catch((e) => {
-            alert('Something went wrong');
+            setModalMessage('Login failed: Please check your credentials and try again.');
+            setShowModal(true);
          });
    };
 
@@ -60,33 +69,29 @@ export default function LoginView({ onLoggedIn }) {
                <h3 className="mb-4">Login</h3>
                <Form className="login-form" onSubmit={handleSubmit}>
                   <Form.Group>
-                     <FloatingLabel
-                        controlId="floatingEmail"
-                        label="Email Address"
-                        className="mb-3">
-                        <Form.Control
-                           type="email"
-                           className="rounded"
-                           value={userData.email}
-                           onChange={(e) =>
-                              setUserData((prevUserData) => ({
-                                 ...prevUserData,
-                                 email: e.target.value,
-                              }))
-                           }
-                           required
-                        />
-                     </FloatingLabel>
+                     <Form.Label htmlFor="Email">Email</Form.Label>
+                     <Form.Control
+                        type="email"
+                        id="Email"
+                        className="rounded"
+                        value={userData.email}
+                        onChange={(e) =>
+                           setUserData((prevUserData) => ({
+                              ...prevUserData,
+                              email: e.target.value,
+                           }))
+                        }
+                        required
+                     />
                   </Form.Group>
 
+                  {/* password */}
                   <Form.Group className="my-3">
-                     <FloatingLabel
-                        controlId="floatingPassword"
-                        label="Password"
-                        className="mb-3">
+                     <Form.Label htmlFor="Password">Password</Form.Label>
+                     <InputGroup>
                         <Form.Control
-                           type="password"
-                           className="rounded"
+                           id="Password"
+                           type={passwordShown ? "text" : "password"}
                            value={userData.password}
                            onChange={(e) =>
                               setUserData((prevUserData) => ({
@@ -97,7 +102,13 @@ export default function LoginView({ onLoggedIn }) {
                            minLength="8"
                            required
                         />
-                     </FloatingLabel>
+                        <Button
+                           variant="outline-secondary"
+                           onClick={togglePasswordVisibility}
+                        >
+                           {passwordShown ? "Hide" : "Show"}
+                        </Button>
+                     </InputGroup>
                   </Form.Group>
 
                   <Button type="submit" className="mt-2">
@@ -107,6 +118,11 @@ export default function LoginView({ onLoggedIn }) {
             </Col>
             <Col></Col> {/* Empty column for spacing */}
          </Row>
+         <Modal show={showModal} onHide={() => setShowModal(false)}>
+            <Modal.Header closeButton>
+               <Modal.Title>{modalMessage}</Modal.Title>
+            </Modal.Header>
+         </Modal>
       </Container>
    );
 }

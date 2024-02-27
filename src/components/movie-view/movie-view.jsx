@@ -44,16 +44,22 @@ export default function MovieView({ movies }) {
 }
 
 MovieView.propTypes = {
-   movies: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      title: PropTypes.string.isRequired,
-      director: PropTypes.string.isRequired,
-      genres: PropTypes.arrayOf(
-         PropTypes.shape({
-            name: PropTypes.string.isRequired,
-         })
-      ).isRequired,
-      description: PropTypes.string.isRequired,
-      poster: PropTypes.string.isRequired,
-   }).isRequired,
+   movies: PropTypes.arrayOf(
+
+      PropTypes.shape(
+         {
+            id: PropTypes.string.isRequired,
+            title: PropTypes.string.isRequired,
+            director: PropTypes.string.isRequired,
+            genres: PropTypes.arrayOf(
+               PropTypes.shape({
+                  name: PropTypes.string.isRequired,
+               })
+            ).isRequired,
+            description: PropTypes.string.isRequired,
+            poster: PropTypes.string.isRequired,
+         }
+      )
+
+   ).isRequired,
 };
