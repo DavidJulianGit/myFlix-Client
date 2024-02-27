@@ -112,7 +112,12 @@ export default function MainView() {
                <Route
                   path="/movies/:movieId"
                   element={!user ? <Navigate to="/login" replace /> : movies.length === 0 ? <Col>No movies to display!</Col> :
-                     <MovieView movies={movies} />}
+                     <MovieView 
+                        movies={movies} 
+                        JWT={token} 
+                        user={user} 
+                        updateFavorites={updateUserFavoriteMovies}
+                     />}
                />
 
                <Route
