@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 
@@ -7,6 +7,8 @@ import MovieCard from '../movie-card/movie-card';
 import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
 import SignupView from '../signup-view/signup-view';
+import NavigationBar from '../nagivation-bar/navigation-bar';
+import ProfileView from '../profile-view/profile-view';
 
 export default function MainView() {
    // Local Storage
@@ -17,7 +19,8 @@ export default function MainView() {
    const [user, setUser] = useState(storedUser ? storedUser : null);
    const [token, setToken] = useState(storedToken ? storedToken : null);
    const [movies, setMovies] = useState([]);
-   const [selectedMovie, setSelectedMovie] = useState(null);
+
+
 
    const APIUrl = 'https://myflix-z30i.onrender.com/movies';
 
@@ -32,6 +35,7 @@ export default function MainView() {
       })
          .then((response) => response.json())
          .then((data) => {
+
             const moviesFromApi = data.map((movie) => {
                return {
                   id: movie._id,
@@ -47,6 +51,7 @@ export default function MainView() {
          });
    }, [token]);
 
+
    const handleLogout = () => {
       // Clear local storage
       localStorage.clear();
@@ -55,133 +60,103 @@ export default function MainView() {
       setToken(null);
    };
 
-   // Display LoginView if no user is logged in
-   if (!user) {
-      return (
-         <Container className="mt-5">
-            <Row>
-               <Col>
-                  <LoginView
-                     onLoggedIn={(user, token) => {
-                        setUser(user);
-                        setToken(token);
-                     }}
-                  />
-               </Col>
-            </Row>
-            <Row>
-               <Col className="mt-5 d-flex justify-content-center justify-content-md-center align-items-center">
-                  <h4>or</h4>
-               </Col>
-            </Row>
-            <Row>
-               <Col>
-                  <SignupView
-                     onLoggedIn={(user, token) => {
-                        setUser(user);
-                        setToken(token);
-                     }}
-                  />
-               </Col>
-            </Row>
-         </Container>
-      );
-   }
+   // Update the user's favorite movies list
+   const updateUserFavoriteMovies = (updatedUser) => {
+      setUser(updatedUser); // Assuming the updatedUser object includes the updated list of favorite movies
+      localStorage.setItem('user', JSON.stringify(updatedUser)); // Update local storage
+   };
 
-   if (selectedMovie) {
-      // Array of genre names of selectedMovie
-      const selectedMovieGenres = selectedMovie.genres.map(
-         (genre) => genre.name
-      );
+   const movieCards = movies.map(movie => {
+      return <MovieCard
+         JWT={token}
+         user={user}
+         key={movie.id}
+         movie={movie}
+         updateFavorites={updateUserFavoriteMovies}
+      />;
+   })
 
-      // Array of movies with at least one genre in common with selectedMovie
-      const moviesWithCommonGenres = movies.filter((movie) => {
-         return movie.genres.some((genre) => {
-            return (
-               selectedMovieGenres.includes(genre.name) &&
-               movie.title !== selectedMovie.title
-            );
-         });
-      });
-
-      // Moviecards of similar movies
-      const similarMovieCards = moviesWithCommonGenres.map((movie) => {
-         return (
-            <MovieCard
-               key={movie._id}
-               movieData={movie}
-               onMovieClick={(newSelectedMovie) =>
-                  setSelectedMovie(newSelectedMovie)
-               }
-            />
-         );
-      });
-
-      return (
-         <>
-            <Container className="mt-5">
-               <Row>
-                  <Col className="text-center mb-5">
-                     <Button variant="warning" onClick={handleLogout}>
-                        Logout
-                     </Button>
-                  </Col>
-               </Row>
-               <Row>
-                  <Col>
-                     <MovieView
-                        onBackClick={() => setSelectedMovie(null)}
-                        movie={selectedMovie}
-                     />
-                  </Col>
-               </Row>
-            </Container>
-
-            <Container className="mt-5">
-               <Row>
-                  <Col>
-                     <hr />
-                     <h2 className="my-4">Similar Movies</h2>
-                  </Col>
-               </Row>
-               <Row>{similarMovieCards}</Row>
-            </Container>
-         </>
-      );
-   }
-
-   if (movies.length === 0) {
-      return (
-         <Container className="mt-5">
-            <Row>
-               <Col>
-                  <h2 className="my-4">No movies to display!</h2>
-               </Col>
-            </Row>
-         </Container>
-      );
-   }
+   let favoriteMovies = user && user.favoriteMovies ? movies.filter(m => user.favoriteMovies.includes(m.id)) : [];
+   const favoriteMovieCards = favoriteMovies.map(movie => {
+      return <MovieCard JWT={token} user={user} key={movie.id} movie={movie} updateFavorites={updateUserFavoriteMovies} />;
+   })
 
    return (
-      <>
-         <Container className="text-center">
-            <Row>
-               <Col className="mb-5">
-                  <Button variant="warning" onClick={handleLogout}>
-                     Logout
-                  </Button>
-               </Col>
-            </Row>
-            <Row className="g-5">
-               {movies.map((movie) => (
-                  <MovieCard
-                     key={movie.id}
-                     movieData={movie}
-                     onMovieClick={() => setSelectedMovie(movie)}
-                  />
-               ))}
-            </Row>
+      <BrowserRouter>
+         <NavigationBar user={user} onLoggedOut={handleLogout} />
+         <Container className="mt-5">
+            <Routes>
+               <Route path="/signup" element={
+                  user ?
+                     (<Navigate to="/" />) : <SignupView />} />
+               <Route path="/login" element={
+                  user ?
+                     (<Navigate to="/" />) :
+                     <LoginView onLoggedIn={(user, token) => {
+                        setUser(user);
+                        setToken(token);
+                     }} />}
+               />
+               <Route
+                  path="/movies"
+                  element={
+                     !user ? <Navigate to="/login" replace /> :
+                        movies.length === 0 ?
+                           <Col><h2 className="my-4">No movies to display!</h2></Col> :
+                           <Row className="g-4">
+                              {movieCards}
+                           </Row>
+                  }
+               />
+
+               <Route
+                  path="/movies/:movieId"
+                  element={!user ? <Navigate to="/login" replace /> : movies.length === 0 ? <Col>No movies to display!</Col> :
+                     <MovieView 
+                        movies={movies} 
+                        JWT={token} 
+                        user={user} 
+                        updateFavorites={updateUserFavoriteMovies}
+                     />}
+               />
+
+               <Route
+                  path="/"
+                  element={user ? <Navigate to="/movies" replace /> :
+                     <Navigate to="/login" replace />}
+               />
+
+               <Route path='/profile'
+                  element={
+                     user ?
+                        <>
+                           <Container className="mt-5">
+                              <Row>
+                                 <Col className=''>
+                                    <h2 className='mb-4'>My Favorite Movies</h2>
+                                 </Col>
+                              </Row>
+                              <Row className="g-4">
+                                 {favoriteMovieCards}
+                              </Row>
+                           </Container>
+                           <hr></hr>
+                           <ProfileView
+                              movies={movies}
+                              userData={user}
+                              JWT={token}
+                              onLoggedIn={(user, token) => {
+                                 setUser(user);
+                              }}
+                              handleLogout={handleLogout}
+                           />
+                        </>
+                        : <Navigate to="/login" replace />
+                  }
+               />
+
+            </Routes>
          </Container>
-      </>
+      </BrowserRouter>
    );
 }

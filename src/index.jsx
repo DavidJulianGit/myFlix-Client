@@ -1,17 +1,18 @@
 import { createRoot } from 'react-dom/client';
-import NavigationBar from './components/nagivation-bar/navigation-bar';
-import MainView from './components/main-view/main-view';
 import { Container } from 'react-bootstrap';
+import MainView from './components/main-view/main-view';
+
 
 // Styles
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css'; 
+import './bootstrap.min.css';
 import './index.scss';
+
 
 const App = () => {
    return (
       <>
          <Container>
-            <NavigationBar />
             <MainView />
          </Container>
       </>
