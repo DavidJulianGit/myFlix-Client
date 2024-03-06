@@ -10,11 +10,19 @@ import {
    InputGroup,
    Modal
 } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserData, setToken, clearUser } from '../../redux/reducers/user';
 
 
 
-export default function ProfileView({ userData, JWT, onLoggedIn, handleLogout }) {
-   const [user, setUser] = useState(userData);
+export default function ProfileView() {
+
+   const movies = useSelector((state) => state.movies);
+   const user = useSelector((state) => state.user.userData);
+   const token = useSelector((state) => state.user.token);
+   const dispatch = useDispatch();
+
+   const [profileUser, setProfileUser] = useState(user);
    const [newPassword, setNewPassword] = useState('');
    const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
    const [passwordShown, setPasswordShown] = useState(false);
@@ -34,7 +42,7 @@ export default function ProfileView({ userData, JWT, onLoggedIn, handleLogout })
       const headers = {
          'Content-Type': 'application/json',
          Host: 'myflix-z30i.onrender.com',
-         Authorization: `Bearer ${JWT}`
+         Authorization: `Bearer ${token}`
       }
 
       fetch(UpdateUserDataURL, {
@@ -45,18 +53,19 @@ export default function ProfileView({ userData, JWT, onLoggedIn, handleLogout })
          .then(response => response.json())
          .then(updatedUser => {
             if (updatedUser) {
-               console.log("successful update");
-               localStorage.setItem('user', JSON.stringify(updatedUser));
-               setUser(updatedUser);
-               onLoggedIn(updatedUser, JWT);
-               setModalData({ title: 'Update', message: 'User data successfully updated' });
+               console.log("successful update - profile-view");
+               console.log(updatedUser);
+
+               dispatch(setUserData(updatedUser));
+
+               setModalData({ title: 'Update', message: 'User data successfully updated.', error: false });
                setShowModal(true);
             } else {
                throw new Error('Update unsuccessful.');
             }
          })
          .catch((e) => {
-            setModalData({ title: 'Error', message: `Something went wrong: ${e.message}` });
+            setModalData({ title: 'Error', message: `Something went wrong: ${e.message}`, error: true });
             setShowModal(true);
          });
 
@@ -66,10 +75,10 @@ export default function ProfileView({ userData, JWT, onLoggedIn, handleLogout })
       event.preventDefault();
 
       const data = {
-         firstname: user.firstname,
-         lastname: user.lastname,
-         email: user.email,
-         birthday: user.birthday,
+         firstname: profileUser.firstname,
+         lastname: profileUser.lastname,
+         email: profileUser.email,
+         birthday: profileUser.birthday,
       };
 
       fetchRequest(data);
@@ -99,7 +108,7 @@ export default function ProfileView({ userData, JWT, onLoggedIn, handleLogout })
       })
          .then(response => {
             if (response.status === 200) {
-               handleLogout();
+               dispatch(clearUser());
             }
          })
          .catch((e) => {
@@ -107,6 +116,7 @@ export default function ProfileView({ userData, JWT, onLoggedIn, handleLogout })
             setShowModal(true);
          });
    }
+
    // Format date to yyyy-mm-dd
    function formatDateForInput(dateString) {
       const date = new Date(dateString);
@@ -116,8 +126,22 @@ export default function ProfileView({ userData, JWT, onLoggedIn, handleLogout })
    // Phase the user has to type in to enable account deletion
    const StringToDeleteAccount = `Delete account ${user.email}`;
 
+   let favoriteMovies = user && user.favoriteMovies ? movies.filter(m => user.favoriteMovies.includes(m.id)) : [];
+   const favoriteMovieCards = favoriteMovies.map(movie => {
+      return <MovieCard key={movie.id} movie={movie} />;
+   })
+
    return (
       <Container className="mt-5">
+         <Row>
+            <Col className=''>
+               <h2 className='mb-4'>My Favorite Movies</h2>
+            </Col>
+         </Row>
+         <Row className="g-4">
+            {favoriteMovieCards}
+         </Row>
+         <hr></hr>
          <Row>
             <Col></Col> {/* Empty column for spacing */}
             <Col>
@@ -130,9 +154,9 @@ export default function ProfileView({ userData, JWT, onLoggedIn, handleLogout })
                      <Form.Control
                         id="Firstname"
                         type="text"
-                        value={user.firstname}
+                        value={profileUser.firstname}
                         onChange={(e) =>
-                           setUser((prevUser) => ({
+                           setProfileUser((prevUser) => ({
                               ...prevUser,
                               firstname: e.target.value,
                            }))
@@ -146,10 +170,9 @@ export default function ProfileView({ userData, JWT, onLoggedIn, handleLogout })
                      <Form.Control
                         id="Lastname"
                         type="text"
-
-                        value={user.lastname}
+                        value={profileUser.lastname}
                         onChange={(e) =>
-                           setUser((prevUser) => ({
+                           setProfileUser((prevUser) => ({
                               ...prevUser,
                               lastname: e.target.value,
                            }))
@@ -165,9 +188,9 @@ export default function ProfileView({ userData, JWT, onLoggedIn, handleLogout })
                         id="Email"
                         type="email"
 
-                        value={user.email}
+                        value={profileUser.email}
                         onChange={(e) =>
-                           setUser((prevUser) => ({
+                           setProfileUser((prevUser) => ({
                               ...prevUser,
                               email: e.target.value,
                            }))
@@ -182,9 +205,9 @@ export default function ProfileView({ userData, JWT, onLoggedIn, handleLogout })
                         id="Birthday"
                         type="date"
 
-                        value={formatDateForInput(user.birthday)}
+                        value={formatDateForInput(profileUser.birthday)}
                         onChange={(e) => {
-                           setUser((prevUser) => ({
+                           setProfileUser((prevUser) => ({
                               ...prevUser,
                               birthday: e.target.value,
                            }));
@@ -271,9 +294,9 @@ export default function ProfileView({ userData, JWT, onLoggedIn, handleLogout })
          {/* MODAL */}
          <Modal show={showModal} onHide={() => setShowModal(false)}>
             <Modal.Header closeButton>
-               <Modal.Title>{modalData.title}</Modal.Title>
+               <Modal.Title className={'text-warning'}>{modalData.title}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>{modalData.message}</Modal.Body>
+            <Modal.Body className={modalData.error ? 'text-danger' : 'text-success'}>{modalData.message}</Modal.Body>
          </Modal>
       </Container>
    );

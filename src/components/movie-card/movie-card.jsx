@@ -3,9 +3,16 @@ import PropTypes from 'prop-types';
 import combineGenreNames from '../../utilities/combineGenreNames';
 import { Link } from 'react-router-dom';
 import { IoStarOutline, IoStar } from "react-icons/io5";
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserData } from '../../redux/reducers/user';
 
 
-export default function MovieCard({ movie, user, JWT, updateFavorites }) {
+export default function MovieCard({ movie }) {
+
+   //REDUX
+   const user = useSelector(state => state.user.userData);
+   const token = useSelector(state => state.user.token)
+   const dispatch = useDispatch();
 
    const isFavorite = user && user.favoriteMovies ? user.favoriteMovies.includes(movie.id) : false;
 
@@ -15,7 +22,7 @@ export default function MovieCard({ movie, user, JWT, updateFavorites }) {
       const headers = {
          'Content-Type': 'application/json',
          Host: 'myflix-z30i.onrender.com',
-         Authorization: `Bearer ${JWT}`
+         Authorization: `Bearer ${token}`
       }
 
       const UpdateFavoriteMovieURL = `https://myflix-z30i.onrender.com/users/${user.email}/favoriteMovies/${movie.id}`;
@@ -27,8 +34,7 @@ export default function MovieCard({ movie, user, JWT, updateFavorites }) {
       })
          .then((response) => response.json())
          .then((data) => {
-            console.log(data);
-            updateFavorites(data);
+            dispatch(setUserData(data));
          })
          .catch((e) => {
             console.error('Error:', e);

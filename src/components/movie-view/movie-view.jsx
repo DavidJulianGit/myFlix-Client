@@ -7,19 +7,27 @@ import { IoStarOutline, IoStar } from "react-icons/io5";
 import MovieCard from '../movie-card/movie-card';
 import combineGenreNames from '../../utilities/combineGenreNames';
 import findSimilarMovies from '../../utilities/findSimilarMovies';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserData } from '../../redux/reducers/user';
 
-export default function MovieView({ movies, user, JWT, updateFavorites }) {
+export default function MovieView({ JWT }) {
 
+   // REDUX
+   const movies = useSelector((state) => state.movies);
+   const user = useSelector((state) => state.user);
+   const dispatch = useDispatch();
+
+   // get the movieId from the URL
    const { movieId } = useParams();
-   const movie = movies.find(m => m.title === movieId);
 
-   const similarMovies = findSimilarMovies(movies, movie).map( movie => {
+   // get the movie with _id movieId
+   const movie = movies.find(movie => movie.title === movieId);
+
+   const similarMovies = findSimilarMovies(movies, movie).map(movie => {
       return (
-         <MovieCard 
-            movie={movie} 
-            user={user}
+         <MovieCard
+            movie={movie}
             JWT={JWT}
-            updateFavorites={updateFavorites}
          />
       );
    })
@@ -52,7 +60,7 @@ export default function MovieView({ movies, user, JWT, updateFavorites }) {
          .then((response) => response.json())
          .then((data) => {
             console.log(data);
-            updateFavorites(data);
+            dispatch(setUserData(data));
          })
          .catch((e) => {
             console.error('Error:', e);
@@ -61,7 +69,7 @@ export default function MovieView({ movies, user, JWT, updateFavorites }) {
 
 
    };
-   
+
    return (
       <Container className='col-xl-10 col-l-11'>
          <Row>
@@ -104,36 +112,19 @@ export default function MovieView({ movies, user, JWT, updateFavorites }) {
                         onClick={toggleFavorite}
                      />
                   }
-                </div>
+               </div>
             </Col>
          </Row>
          <hr></hr>
          <Row>
-            
+
             {similarMovies}
-            
+
          </Row>
       </Container>
    );
 }
 
 MovieView.propTypes = {
-   movies: PropTypes.arrayOf(
 
-      PropTypes.shape(
-         {
-            id: PropTypes.string.isRequired,
-            title: PropTypes.string.isRequired,
-            director: PropTypes.string.isRequired,
-            genres: PropTypes.arrayOf(
-               PropTypes.shape({
-                  name: PropTypes.string.isRequired,
-               })
-            ).isRequired,
-            description: PropTypes.string.isRequired,
-            poster: PropTypes.string.isRequired,
-         }
-      )
-
-   ).isRequired,
 };

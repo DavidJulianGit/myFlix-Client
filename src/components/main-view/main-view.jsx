@@ -1,14 +1,21 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
+
+//REDUX
+import { useSelector, useDispatch } from 'react-redux';
+import { setMovies } from '../../redux/reducers/movies';
+import { setUserData, setToken, clearUser } from '../../redux/reducers/user';
 
 import MovieCard from '../movie-card/movie-card';
 import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
 import SignupView from '../signup-view/signup-view';
-import NavigationBar from '../nagivation-bar/navigation-bar';
+import NavigationBar from '../navigation-bar/navigation-bar';
 import ProfileView from '../profile-view/profile-view';
+
+
 
 export default function MainView() {
    // Local Storage
@@ -16,17 +23,25 @@ export default function MainView() {
    const storedToken = localStorage.getItem('token');
 
    // State
-   const [user, setUser] = useState(storedUser ? storedUser : null);
-   const [token, setToken] = useState(storedToken ? storedToken : null);
-   const [movies, setMovies] = useState([]);
+   //const [user, setUser] = useState(storedUser ? storedUser : null);
+   //const [token, setToken] = useState(storedToken ? storedToken : null);
+   //const [movies, setMovies] = useState([]);
 
-
+   // Redux
+   const movies = useSelector((state) => state.movies);
+   const user = useSelector((state) => state.user.userData);
+   const token = useSelector((state) => state.user.token);
+   const dispatch = useDispatch();
 
    const APIUrl = 'https://myflix-z30i.onrender.com/movies';
+   console.log('main-view:');
+   console.log(user);
+   console.log(token);
 
    // Load data from API
    useEffect(() => {
       if (!token) {
+         console.log('No token');
          return;
       }
 
@@ -47,7 +62,8 @@ export default function MainView() {
                };
             });
 
-            setMovies(moviesFromApi);
+            //setMovies(moviesFromApi);
+            dispatch(setMovies(moviesFromApi));
          });
    }, [token]);
 
@@ -56,34 +72,24 @@ export default function MainView() {
       // Clear local storage
       localStorage.clear();
       // Reset user and token state
-      setUser(null);
-      setToken(null);
+      dispatch(clearUser());
    };
 
-   // Update the user's favorite movies list
-   const updateUserFavoriteMovies = (updatedUser) => {
-      setUser(updatedUser); // Assuming the updatedUser object includes the updated list of favorite movies
-      localStorage.setItem('user', JSON.stringify(updatedUser)); // Update local storage
-   };
+
 
    const movieCards = movies.map(movie => {
       return <MovieCard
          JWT={token}
-         user={user}
          key={movie.id}
          movie={movie}
-         updateFavorites={updateUserFavoriteMovies}
       />;
    })
 
-   let favoriteMovies = user && user.favoriteMovies ? movies.filter(m => user.favoriteMovies.includes(m.id)) : [];
-   const favoriteMovieCards = favoriteMovies.map(movie => {
-      return <MovieCard JWT={token} user={user} key={movie.id} movie={movie} updateFavorites={updateUserFavoriteMovies} />;
-   })
+
 
    return (
       <BrowserRouter>
-         <NavigationBar user={user} onLoggedOut={handleLogout} />
+         <NavigationBar />
          <Container className="mt-5">
             <Routes>
                <Route path="/signup" element={
@@ -92,8 +98,7 @@ export default function MainView() {
                <Route path="/login" element={
                   user ?
                      (<Navigate to="/" />) :
-                     <LoginView onLoggedIn={(user, token) => {
-                        setUser(user);
+                     <LoginView onLoggedIn={(token) => {
                         setToken(token);
                      }} />}
                />
@@ -112,11 +117,8 @@ export default function MainView() {
                <Route
                   path="/movies/:movieId"
                   element={!user ? <Navigate to="/login" replace /> : movies.length === 0 ? <Col>No movies to display!</Col> :
-                     <MovieView 
-                        movies={movies} 
-                        JWT={token} 
-                        user={user} 
-                        updateFavorites={updateUserFavoriteMovies}
+                     <MovieView
+                        JWT={token}
                      />}
                />
 
@@ -130,25 +132,8 @@ export default function MainView() {
                   element={
                      user ?
                         <>
-                           <Container className="mt-5">
-                              <Row>
-                                 <Col className=''>
-                                    <h2 className='mb-4'>My Favorite Movies</h2>
-                                 </Col>
-                              </Row>
-                              <Row className="g-4">
-                                 {favoriteMovieCards}
-                              </Row>
-                           </Container>
-                           <hr></hr>
                            <ProfileView
-                              movies={movies}
-                              userData={user}
                               JWT={token}
-                              onLoggedIn={(user, token) => {
-                                 setUser(user);
-                              }}
-                              handleLogout={handleLogout}
                            />
                         </>
                         : <Navigate to="/login" replace />

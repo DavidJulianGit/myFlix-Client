@@ -9,9 +9,16 @@ import {
    Modal
 } from 'react-bootstrap';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setUserData, setToken } from '../../redux/reducers/user';
 
 export default function LoginView({ onLoggedIn }) {
-   const [userData, setUserData] = useState({
+
+   // REDUX
+   const dispatch = useDispatch();
+
+   // Local State
+   const [loginUserData, setloginUserData] = useState({
       email: '',
       password: '',
    });
@@ -33,8 +40,8 @@ export default function LoginView({ onLoggedIn }) {
       };
 
       const data = {
-         email: userData.email,
-         password: userData.password
+         email: loginUserData.email,
+         password: loginUserData.password
       }
 
       const LoginURL = 'https://myflix-z30i.onrender.com/login';
@@ -46,16 +53,18 @@ export default function LoginView({ onLoggedIn }) {
       })
          .then((response) => response.json())
          .then((data) => {
+
             if (data.user) {
-               localStorage.setItem('user', JSON.stringify(data.user));
-               localStorage.setItem('token', data.token);
-               onLoggedIn(data.user, data.token);
+               dispatch(setUserData(data.user));
+               dispatch(setToken(data.token));
+
             } else {
                setModalMessage(data.message.message);
                setShowModal(true);
             }
          })
          .catch((e) => {
+            console.error(e);
             setModalMessage('Login failed: Please check your credentials and try again.');
             setShowModal(true);
          });
@@ -74,10 +83,10 @@ export default function LoginView({ onLoggedIn }) {
                         type="email"
                         id="Email"
                         className="rounded"
-                        value={userData.email}
+                        value={loginUserData.email}
                         onChange={(e) =>
-                           setUserData((prevUserData) => ({
-                              ...prevUserData,
+                           setloginUserData((prevloginUserData) => ({
+                              ...prevloginUserData,
                               email: e.target.value,
                            }))
                         }
@@ -92,10 +101,10 @@ export default function LoginView({ onLoggedIn }) {
                         <Form.Control
                            id="Password"
                            type={passwordShown ? "text" : "password"}
-                           value={userData.password}
+                           value={loginUserData.password}
                            onChange={(e) =>
-                              setUserData((prevUserData) => ({
-                                 ...prevUserData,
+                              setloginUserData((prevloginUserData) => ({
+                                 ...prevloginUserData,
                                  password: e.target.value,
                               }))
                            }
