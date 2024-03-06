@@ -18,7 +18,7 @@ export default function LoginView({ onLoggedIn }) {
    const dispatch = useDispatch();
 
    // Local State
-   const [loginUserData, setloginUserData] = useState({
+   const [localUserData, setLocalUserData] = useState({
       email: '',
       password: '',
    });
@@ -40,8 +40,8 @@ export default function LoginView({ onLoggedIn }) {
       };
 
       const data = {
-         email: loginUserData.email,
-         password: loginUserData.password
+         email: localUserData.email,
+         password: localUserData.password
       }
 
       const LoginURL = 'https://myflix-z30i.onrender.com/login';
@@ -53,12 +53,14 @@ export default function LoginView({ onLoggedIn }) {
       })
          .then((response) => response.json())
          .then((data) => {
-
+            console.log(data);
             if (data.user) {
+               
                dispatch(setUserData(data.user));
                dispatch(setToken(data.token));
-
+               
             } else {
+               
                setModalMessage(data.message.message);
                setShowModal(true);
             }
@@ -83,10 +85,10 @@ export default function LoginView({ onLoggedIn }) {
                         type="email"
                         id="Email"
                         className="rounded"
-                        value={loginUserData.email}
+                        value={localUserData.email}
                         onChange={(e) =>
-                           setloginUserData((prevloginUserData) => ({
-                              ...prevloginUserData,
+                           setLocalUserData((prevlocalUserData) => ({
+                              ...prevlocalUserData,
                               email: e.target.value,
                            }))
                         }
@@ -101,10 +103,10 @@ export default function LoginView({ onLoggedIn }) {
                         <Form.Control
                            id="Password"
                            type={passwordShown ? "text" : "password"}
-                           value={loginUserData.password}
+                           value={localUserData.password}
                            onChange={(e) =>
-                              setloginUserData((prevloginUserData) => ({
-                                 ...prevloginUserData,
+                              setLocalUserData((prevlocalUserData) => ({
+                                 ...prevlocalUserData,
                                  password: e.target.value,
                               }))
                            }

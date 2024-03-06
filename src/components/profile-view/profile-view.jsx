@@ -17,12 +17,12 @@ import { setUserData, setToken, clearUser } from '../../redux/reducers/user';
 
 export default function ProfileView() {
 
-   const movies = useSelector((state) => state.movies);
+   const movies = useSelector((state) => state.movies.data);
    const user = useSelector((state) => state.user.userData);
    const token = useSelector((state) => state.user.token);
    const dispatch = useDispatch();
 
-   const [profileUser, setProfileUser] = useState(user);
+   const [localUser, setLocalUser] = useState(user);
    const [newPassword, setNewPassword] = useState('');
    const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
    const [passwordShown, setPasswordShown] = useState(false);
@@ -53,13 +53,14 @@ export default function ProfileView() {
          .then(response => response.json())
          .then(updatedUser => {
             if (updatedUser) {
-               console.log("successful update - profile-view");
-               console.log(updatedUser);
-
                dispatch(setUserData(updatedUser));
 
+               // Reset password inputs
+               setNewPassword('');
+               setNewPasswordRepeat('');
+
                setModalData({ title: 'Update', message: 'User data successfully updated.', error: false });
-               setShowModal(true);
+               setShowModal(true); 
             } else {
                throw new Error('Update unsuccessful.');
             }
@@ -75,10 +76,10 @@ export default function ProfileView() {
       event.preventDefault();
 
       const data = {
-         firstname: profileUser.firstname,
-         lastname: profileUser.lastname,
-         email: profileUser.email,
-         birthday: profileUser.birthday,
+         firstname: localUser.firstname,
+         lastname: localUser.lastname,
+         email: localUser.email,
+         birthday: localUser.birthday,
       };
 
       fetchRequest(data);
@@ -93,6 +94,7 @@ export default function ProfileView() {
 
       fetchRequest(data);
    };
+
    const handleDeleteAccount = (event) => {
       event.preventDefault();
 
@@ -115,7 +117,7 @@ export default function ProfileView() {
             setModalData({ title: 'Error', message: `Something went wrong: ${e.message}` });
             setShowModal(true);
          });
-   }
+   };
 
    // Format date to yyyy-mm-dd
    function formatDateForInput(dateString) {
@@ -154,9 +156,9 @@ export default function ProfileView() {
                      <Form.Control
                         id="Firstname"
                         type="text"
-                        value={profileUser.firstname}
+                        value={localUser.firstname}
                         onChange={(e) =>
-                           setProfileUser((prevUser) => ({
+                           setLocalUser((prevUser) => ({
                               ...prevUser,
                               firstname: e.target.value,
                            }))
@@ -170,9 +172,9 @@ export default function ProfileView() {
                      <Form.Control
                         id="Lastname"
                         type="text"
-                        value={profileUser.lastname}
+                        value={localUser.lastname}
                         onChange={(e) =>
-                           setProfileUser((prevUser) => ({
+                           setLocalUser((prevUser) => ({
                               ...prevUser,
                               lastname: e.target.value,
                            }))
@@ -188,9 +190,9 @@ export default function ProfileView() {
                         id="Email"
                         type="email"
 
-                        value={profileUser.email}
+                        value={localUser.email}
                         onChange={(e) =>
-                           setProfileUser((prevUser) => ({
+                           setLocalUser((prevUser) => ({
                               ...prevUser,
                               email: e.target.value,
                            }))
@@ -205,9 +207,9 @@ export default function ProfileView() {
                         id="Birthday"
                         type="date"
 
-                        value={formatDateForInput(profileUser.birthday)}
+                        value={formatDateForInput(localUser.birthday)}
                         onChange={(e) => {
-                           setProfileUser((prevUser) => ({
+                           setLocalUser((prevUser) => ({
                               ...prevUser,
                               birthday: e.target.value,
                            }));
