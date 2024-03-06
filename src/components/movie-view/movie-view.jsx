@@ -13,7 +13,7 @@ import { setUserData } from '../../redux/reducers/user';
 export default function MovieView({ JWT }) {
 
    // REDUX
-   const movies = useSelector((state) => state.movies);
+   const movies = useSelector((state) => state.movies.data);
    const user = useSelector((state) => state.user);
    const dispatch = useDispatch();
 
