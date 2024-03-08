@@ -31,11 +31,19 @@ export const fetchMovies = createAsyncThunk(
 const movieSlice = createSlice({
    name: 'movies',
    initialState: {
-      data: [],
-      status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
+      data: [],         // Array of movies
+      filter: '',       // String for filtering movie array
+      status: 'idle',   // 'idle' | 'loading' | 'succeeded' | 'failed'
       error: null,
+
    },
    reducers: {
+      setMovies: (state, action) => {
+         state.movies = action.payload;
+      },
+      setFilter: (state, action) => {
+         state.filter = action.payload;
+      }
    },
    extraReducers: (builder) => {
       builder
@@ -49,10 +57,17 @@ const movieSlice = createSlice({
          .addCase(fetchMovies.rejected, (state, action) => {
             state.status = 'failed';
             state.error = action.payload;
-         });
+         })
+         .addMatcher(
+            action => action.type === 'user/clearUser',
+            (state) => {
+               // Reset the filter when `clearUser` is dispatched / the user is logged out
+               state.filter = '';
+            }
+         );
    },
 });
 
 // Exporting reducers and async thunk
-export const { setMovies } = movieSlice.actions;
+export const { setMovies, setFilter } = movieSlice.actions;
 export default movieSlice.reducer;

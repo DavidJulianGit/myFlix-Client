@@ -1,6 +1,6 @@
-import { Col, Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import combineGenreNames from '../../utilities/combineGenreNames';
+import { Col, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { IoStarOutline, IoStar } from "react-icons/io5";
 import { useDispatch, useSelector } from 'react-redux';

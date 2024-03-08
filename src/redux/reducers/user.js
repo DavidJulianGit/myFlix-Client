@@ -89,10 +89,10 @@ const userSlice = createSlice({
             state.error = action.payload;
          })
 
-         .addCase(toggleFavorite.pending, (state) => {
+         .addCase(toggleFavorite.pending, () => {
          })
          .addCase(toggleFavorite.fulfilled, (state, action) => {
-            localStorage.setItem('user', JSON.stringify(action.payload.user));
+            localStorage.setItem('user', JSON.stringify(action.payload));
             state.userData = action.payload;
          })
          .addCase(toggleFavorite.rejected, (state, action) => {

@@ -1,20 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
-import { useEffect } from 'react';
 
 //REDUX
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMovies } from '../../redux/reducers/movies';
 import { setUserData, setToken } from '../../redux/reducers/user';
 
-import MovieCard from '../movie-card/movie-card';
+// Components
+
 import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
 import SignupView from '../signup-view/signup-view';
 import NavigationBar from '../navigation-bar/navigation-bar';
 import ProfileView from '../profile-view/profile-view';
-
+import MovieList from '../movie-list/movie-list';
 
 
 export default function MainView() {
@@ -27,29 +27,35 @@ export default function MainView() {
    const token = useSelector((state) => state.user.token);
    const dispatch = useDispatch();
 
+   // Function to safely parse JSON from localStorage
+   const safelyParseJSON = (json) => {
+      try {
+         return JSON.parse(json);
+      } catch (error) {
+         console.error('Parsing error on ', json, error);
+         return null; // Return null or any other fallback value on error
+      }
+   };
+
    // Load data from API
    useEffect(() => {
 
-      let savedUser = null;
-      let savedToken = null;
+      // In case user & token are saved in local storage - user does not have to login again.
+      const savedUser = safelyParseJSON(localStorage.getItem('user'));
+      const savedToken = localStorage.getItem('token');
 
-      if (localStorage.getItem('user') && localStorage.getItem('token')) {
-         savedUser = JSON.parse(localStorage.getItem('user'));
-         savedToken = localStorage.getItem('token');
-         console.log(savedUser);
-         console.log(savedToken);
+      if (!user && savedUser) {
+         dispatch(setUserData(savedUser));
+      }
+      if (!token && savedToken) {
+         dispatch(setToken(savedToken));
       }
 
-      if (savedUser && savedToken) {
-         dispatch(setUserData(savedUser));
-         dispatch(setToken(savedToken));
+      if (savedToken && !movies.length) {
          dispatch(fetchMovies(savedToken));
       }
+   }, [user, token, movies.length, dispatch]);
 
-      if (token) {
-         dispatch(fetchMovies(token));
-      }
-   }, [token, dispatch]);
 
    // Handling loading state
    if (moviesStatus === 'loading') {
@@ -80,10 +86,6 @@ export default function MainView() {
    }
 
 
-   const movieCards = movies.map(movie => {
-      return <MovieCard key={movie.id} movie={movie} />;
-   })
-
 
 
    return (
@@ -105,15 +107,15 @@ export default function MainView() {
                      !user ? <Navigate to="/login" replace /> :
                         movies.length === 0 ?
                            <Col><h2 className="my-4">No movies to display!</h2></Col> :
-                           <Row className="g-4">
-                              {movieCards}
-                           </Row>
+
+                           <MovieList />
                   }
                />
 
                <Route
                   path="/movies/:movieId"
-                  element={!user ? <Navigate to="/login" replace /> : movies.length === 0 ? <Col>No movies to display!</Col> :
+                  element={!user ? <Navigate to="/login" replace /> : movies.length === 0 ?
+                     <Col>No movies to display!</Col> :
                      <MovieView />}
                />
 
@@ -125,11 +127,7 @@ export default function MainView() {
 
                <Route path='/profile'
                   element={
-                     user ?
-                        <>
-                           <ProfileView />
-                        </>
-                        : <Navigate to="/login" replace />
+                     user ? <ProfileView /> : <Navigate to="/login" replace />
                   }
                />
 

@@ -75,8 +75,6 @@ export default function ProfileView() {
          })
          .then(updatedUser => {
 
-            console.log(updatedUser);
-
             // Reset password inputs
             setNewPassword('');
             setNewPasswordRepeat('');
