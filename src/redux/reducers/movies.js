@@ -36,9 +36,6 @@ const movieSlice = createSlice({
       error: null,
    },
    reducers: {
-      setMovies: (state, action) => {
-         return action.payload;
-      }
    },
    extraReducers: (builder) => {
       builder

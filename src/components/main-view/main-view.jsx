@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 //REDUX
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMovies } from '../../redux/reducers/movies';
+import { setUserData, setToken } from '../../redux/reducers/user';
 
 import MovieCard from '../movie-card/movie-card';
 import MovieView from '../movie-view/movie-view';
@@ -17,7 +18,7 @@ import ProfileView from '../profile-view/profile-view';
 
 
 export default function MainView() {
-   
+
    // Redux
    const movies = useSelector((state) => state.movies.data);
    const moviesStatus = useSelector((state) => state.movies.status);
@@ -28,6 +29,23 @@ export default function MainView() {
 
    // Load data from API
    useEffect(() => {
+
+      let savedUser = null;
+      let savedToken = null;
+
+      if (localStorage.getItem('user') && localStorage.getItem('token')) {
+         savedUser = JSON.parse(localStorage.getItem('user'));
+         savedToken = localStorage.getItem('token');
+         console.log(savedUser);
+         console.log(savedToken);
+      }
+
+      if (savedUser && savedToken) {
+         dispatch(setUserData(savedUser));
+         dispatch(setToken(savedToken));
+         dispatch(fetchMovies(savedToken));
+      }
+
       if (token) {
          dispatch(fetchMovies(token));
       }
@@ -38,7 +56,7 @@ export default function MainView() {
       return (
          <Container>
             <Row>
-               <Col className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+               <Col className="d-flex justify-content-center align-items-center">
                   <Spinner animation="border" role="status">
                      <span className="visually-hidden">Loading...</span>
                   </Spinner>
@@ -47,20 +65,20 @@ export default function MainView() {
          </Container>
       );
    }
-   
+
    // Handling error state
    if (moviesStatus === 'failed') {
       return (
          <Container>
-         <Row>
-            <Col className="d-flex justify-content-center align-items-center">
-               <p>Error fetching movies: {moviesError}</p>
-            </Col>
-         </Row>
-      </Container>
+            <Row>
+               <Col className="d-flex justify-content-center align-items-center">
+                  <p>Error fetching movies: {moviesError}</p>
+               </Col>
+            </Row>
+         </Container>
       );
    }
- 
+
 
    const movieCards = movies.map(movie => {
       return <MovieCard key={movie.id} movie={movie} />;
@@ -83,13 +101,13 @@ export default function MainView() {
                />
                <Route
                   path="/movies"
-                  element={       
+                  element={
                      !user ? <Navigate to="/login" replace /> :
-                     movies.length === 0 ?
-                        <Col><h2 className="my-4">No movies to display!</h2></Col> :
-                        <Row className="g-4">
-                           {movieCards}
-                        </Row>   
+                        movies.length === 0 ?
+                           <Col><h2 className="my-4">No movies to display!</h2></Col> :
+                           <Row className="g-4">
+                              {movieCards}
+                           </Row>
                   }
                />
 

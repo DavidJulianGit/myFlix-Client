@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+
 import { Container, Row, Col, Button, Image, } from 'react-bootstrap';
 import { useParams } from 'react-router';
 import { IoStarOutline, IoStar } from "react-icons/io5";
@@ -8,67 +8,33 @@ import MovieCard from '../movie-card/movie-card';
 import combineGenreNames from '../../utilities/combineGenreNames';
 import findSimilarMovies from '../../utilities/findSimilarMovies';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserData } from '../../redux/reducers/user';
+import { toggleFavorite } from '../../redux/reducers/user';
 
-export default function MovieView({ JWT }) {
+
+export default function MovieView() {
 
    // REDUX
    const movies = useSelector((state) => state.movies.data);
-   const user = useSelector((state) => state.user);
    const dispatch = useDispatch();
 
    // get the movieId from the URL
    const { movieId } = useParams();
 
-   // get the movie with _id movieId
+   // find movie by movieId
    const movie = movies.find(movie => movie.title === movieId);
 
-   const similarMovies = findSimilarMovies(movies, movie).map(movie => {
-      return (
-         <MovieCard
-            movie={movie}
-            JWT={JWT}
-         />
-      );
-   })
+   // check if movie is a favorite
+   const isFavorite = useSelector((state) => state.user.userData.favoriteMovies.includes(movie.id));
 
-   const isFavorite = user && user.favoriteMovies ? user.favoriteMovies.includes(movie.id) : false;
-   const favoriteIconStyle = {
-      position: 'absolute',
-      top: '10px',
-      right: '10px',
-      cursor: 'pointer',
-      zIndex: 1,
-   };
+   // find similar movies
+   const similarMovies = findSimilarMovies(movies, movie).map(movie => <MovieCard key={movie.id} movie={movie} />);
 
-   const toggleFavorite = (event) => {
-      event.preventDefault();
-
-      const headers = {
-         'Content-Type': 'application/json',
-         Host: 'myflix-z30i.onrender.com',
-         Authorization: `Bearer ${JWT}`
-      }
-
-      const UpdateFavoriteMovieURL = `https://myflix-z30i.onrender.com/users/${user.email}/favoriteMovies/${movie.id}`;
-
-      fetch(UpdateFavoriteMovieURL, {
-         method: isFavorite ? 'DELETE' : 'POST',
-         headers: headers,
-
-      })
-         .then((response) => response.json())
-         .then((data) => {
-            console.log(data);
-            dispatch(setUserData(data));
-         })
-         .catch((e) => {
-            console.error('Error:', e);
-            alert('Something went wrong: ' + e.message);
-         });
-
-
-   };
+   const toggle = () => {
+      dispatch(toggleFavorite({
+         movieId: movie.id,
+         isFavorite
+      }));
+   }
 
    return (
       <Container className='col-xl-10 col-l-11'>
@@ -101,15 +67,15 @@ export default function MovieView({ JWT }) {
 
                      <IoStar
                         size="32px"
-                        style={favoriteIconStyle}
-                        onClick={toggleFavorite}
+                        className='favoriteMovieIcon'
+                        onClick={toggle}
                      />
 
                      :
                      <IoStarOutline
                         size="32px"
-                        style={favoriteIconStyle}
-                        onClick={toggleFavorite}
+                        className='favoriteMovieIcon'
+                        onClick={toggle}
                      />
                   }
                </div>
@@ -117,7 +83,7 @@ export default function MovieView({ JWT }) {
          </Row>
          <hr></hr>
          <Row>
-
+            <h2>Similar Movies</h2>
             {similarMovies}
 
          </Row>
@@ -125,6 +91,3 @@ export default function MovieView({ JWT }) {
    );
 }
 
-MovieView.propTypes = {
-
-};

@@ -11,9 +11,9 @@ import {
    Modal
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserData, setToken, clearUser } from '../../redux/reducers/user';
-
-
+import { setUserData, clearUser } from '../../redux/reducers/user';
+import { EyeSlashFill, EyeFill } from 'react-bootstrap-icons';
+import formatDateForInput from '../../utilities/formatDate';
 
 export default function ProfileView() {
 
@@ -29,7 +29,8 @@ export default function ProfileView() {
    const [checkPhrase, setCheckPhrase] = useState(false);
    const [showModal, setShowModal] = useState(false);
    const [modalData, setModalData] = useState({ title: '', message: '' });
-
+   const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
+   const [showPasswordChangeModal, setShowPasswordChangeModal] = useState(false);
    const UpdateUserDataURL = `https://myflix-z30i.onrender.com/users/${user.email}`;
 
 
@@ -37,39 +38,58 @@ export default function ProfileView() {
       setPasswordShown(!passwordShown);
    }
 
-   function fetchRequest(data) {
+   function fetchRequest(data, type) {
 
-      const headers = {
-         'Content-Type': 'application/json',
-         Host: 'myflix-z30i.onrender.com',
-         Authorization: `Bearer ${token}`
+
+      let fetchOptions = {
+         method: 'PATCH',
+         headers: {
+            'Content-Type': 'application/json',
+            Host: 'myflix-z30i.onrender.com',
+            Authorization: `Bearer ${token}`
+         },
+         body: JSON.stringify(data),
       }
 
-      fetch(UpdateUserDataURL, {
-         method: 'PATCH',
-         headers: headers,
-         body: JSON.stringify(data),
-      })
-         .then(response => response.json())
-         .then(updatedUser => {
-            if (updatedUser) {
-               dispatch(setUserData(updatedUser));
 
-               // Reset password inputs
-               setNewPassword('');
-               setNewPasswordRepeat('');
+      // Set fetchOptions and modal content according to request type
+      switch (type) {
+         case 'userData':
+            setModalData({ title: 'Update', message: 'Changes saved.', error: false });
+            break;
+         case 'password':
 
-               setModalData({ title: 'Update', message: 'User data successfully updated.', error: false });
-               setShowModal(true); 
+            setModalData({ title: 'Update', message: 'New password saved.', error: false });
+            break;
+         default:
+            setModalData({ title: 'Update', message: 'User data successfully updated.', error: false });
+      }
+
+      fetch(UpdateUserDataURL, fetchOptions)
+         .then(response => {
+            if (response.ok) {
+               return response.json();
             } else {
-               throw new Error('Update unsuccessful.');
+               throw new Error('Failed to update account.');
             }
+         })
+         .then(updatedUser => {
+
+            console.log(updatedUser);
+
+            // Reset password inputs
+            setNewPassword('');
+            setNewPasswordRepeat('');
+
+            setShowModal(true);
+
+            dispatch(setUserData(updatedUser));
+
          })
          .catch((e) => {
             setModalData({ title: 'Error', message: `Something went wrong: ${e.message}`, error: true });
             setShowModal(true);
          });
-
    }
 
    const handleUserUpdateSubmit = (event) => {
@@ -81,36 +101,34 @@ export default function ProfileView() {
          email: localUser.email,
          birthday: localUser.birthday,
       };
-
-      fetchRequest(data);
+      fetchRequest(data, 'userData');
    };
 
-   const handlePasswordUpdateSubmit = (event) => {
+   const handlePasswordChangeSubmit = (event) => {
       event.preventDefault();
 
-      const data = {
-         password: newPassword
-      };
-
-      fetchRequest(data);
+      setShowPasswordChangeModal(false);
+      fetchRequest({ password: newPassword }, 'password');
    };
 
-   const handleDeleteAccount = (event) => {
-      event.preventDefault();
+   const handleDeleteAccount = () => {
+      // Hide modal
+      setShowDeleteConfirmationModal(false);
 
       const headers = {
          'Content-Type': 'application/json',
-         Host: 'myflix-z30i.onrender.com',
-         Authorization: `Bearer ${JWT}`
-      }
+         Authorization: `Bearer ${token}`,
+      };
 
       fetch(UpdateUserDataURL, {
          method: 'DELETE',
          headers: headers,
       })
          .then(response => {
-            if (response.status === 200) {
+            if (response.ok) {
                dispatch(clearUser());
+            } else {
+               throw new Error('Failed to delete account.');
             }
          })
          .catch((e) => {
@@ -119,15 +137,10 @@ export default function ProfileView() {
          });
    };
 
-   // Format date to yyyy-mm-dd
-   function formatDateForInput(dateString) {
-      const date = new Date(dateString);
-      return new Intl.DateTimeFormat('en-CA').format(date); // YYYY-MM-DD format
-   }
-
-   // Phase the user has to type in to enable account deletion
+   // Phrase the user has to type in to enable account deletion
    const StringToDeleteAccount = `Delete account ${user.email}`;
 
+   // get MovieCards of favorite movies
    let favoriteMovies = user && user.favoriteMovies ? movies.filter(m => user.favoriteMovies.includes(m.id)) : [];
    const favoriteMovieCards = favoriteMovies.map(movie => {
       return <MovieCard key={movie.id} movie={movie} />;
@@ -223,7 +236,10 @@ export default function ProfileView() {
 
                {/* Changing Password Form*/}
                <h4 className='mt-4'>Change password</h4>
-               <Form onSubmit={handlePasswordUpdateSubmit}>
+               <Form onSubmit={(event) => {
+                  event.preventDefault();
+                  setShowPasswordChangeModal(true);
+               }}>
                   {/* password */}
                   <Form.Group className="">
                      <Form.Label htmlFor="Password">New Password</Form.Label>
@@ -236,11 +252,8 @@ export default function ProfileView() {
                            minLength="8"
                            isInvalid={newPassword && newPasswordRepeat && newPassword !== newPasswordRepeat}
                         />
-                        <Button
-                           variant="outline-secondary"
-                           onClick={togglePasswordVisibility}
-                        >
-                           {passwordShown ? "Hide" : "Show"}
+                        <Button variant="outline-secondary" onClick={togglePasswordVisibility}>
+                           {passwordShown ? <EyeSlashFill size={20} /> : <EyeFill size={20} />}
                         </Button>
                      </InputGroup>
                   </Form.Group>
@@ -248,7 +261,9 @@ export default function ProfileView() {
                   {/* password Check*/}
                   <Form.Group className="my-3">
                      <Form.Label htmlFor="PasswordCheck">Repeat Password</Form.Label>
+
                      <InputGroup>
+
                         <Form.Control
                            id="newPasswordRepeat"
                            type={passwordShown ? "text" : "password"}
@@ -257,22 +272,30 @@ export default function ProfileView() {
                            minLength="8"
                            isInvalid={newPassword && newPasswordRepeat && newPassword !== newPasswordRepeat}
                         />
-                        <Button
-                           variant="outline-secondary"
-                           onClick={togglePasswordVisibility}
-                        >
-                           {passwordShown ? "Hide" : "Show"}
+
+                        <Button variant="outline-secondary" onClick={togglePasswordVisibility}>
+                           {passwordShown ? <EyeSlashFill size={20} /> : <EyeFill size={20} />}
                         </Button>
+
                      </InputGroup>
+
                      <Form.Control.Feedback type="invalid">
                         Passwords must match.
+
                      </Form.Control.Feedback>
                   </Form.Group>
-                  <Button type="submit" className="mt-2" disabled={!(newPassword && newPasswordRepeat && newPassword === newPasswordRepeat)}>
+
+                  <Button
+                     type="submit"
+                     className="mt-2"
+                     disabled={!(newPassword && newPasswordRepeat && newPassword === newPasswordRepeat)}>
                      Change Password
                   </Button>
+
                </Form>
+
                <hr></hr>
+               {/* Delete Account Form*/}
                <h3>Delete Account</h3>
                <Form onSubmit={handleDeleteAccount}>
                   <Form.Label htmlFor="deleteAccountCheck">
@@ -288,18 +311,46 @@ export default function ProfileView() {
                         e.target.value === StringToDeleteAccount ? setCheckPhrase(true) : setCheckPhrase(false)
                      }}
                   />
-                  <Button type="submit" variant='danger' disabled={!checkPhrase}>Delete Account</Button>
+                  <Button variant='danger' onClick={() => setShowDeleteConfirmationModal(true)} disabled={!checkPhrase}>
+                     Delete Account
+                  </Button>
                </Form>
             </Col>
             <Col></Col> {/* Empty column for spacing */}
          </Row>
-         {/* MODAL */}
-         <Modal show={showModal} onHide={() => setShowModal(false)}>
+
+         {/* Change Password Confirmation MODAL */}
+         <Modal show={showPasswordChangeModal} onHide={() => setShowPasswordChangeModal(false)} centered animation={false}>
             <Modal.Header closeButton>
-               <Modal.Title className={'text-warning'}>{modalData.title}</Modal.Title>
+               <Modal.Title className='text-warning'>Change password</Modal.Title>
             </Modal.Header>
-            <Modal.Body className={modalData.error ? 'text-danger' : 'text-success'}>{modalData.message}</Modal.Body>
+            <Modal.Body>Are you sure you want to <span className='text-warning'>change</span> your <span className='text-warning'>password</span>?</Modal.Body>
+            <Modal.Footer>
+               <Button variant="secondary" onClick={() => setShowPasswordChangeModal(false)}>Cancel</Button>
+               <Button variant="danger" onClick={handlePasswordChangeSubmit}>Change Password</Button>
+            </Modal.Footer>
          </Modal>
+
+         {/* Delete Account Confirmation MODAL */}
+         <Modal show={showDeleteConfirmationModal} onHide={() => setShowDeleteConfirmationModal(false)} centered animation={false}>
+            <Modal.Header closeButton>
+               <Modal.Title className='text-warning'>Confirm Account Deletion</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Are you sure you want to <span className='text-warning'>delete</span> your account?<br />This action cannot be undone.</Modal.Body>
+            <Modal.Footer>
+               <Button variant="secondary" onClick={() => setShowDeleteConfirmationModal(false)}>Cancel</Button>
+               <Button variant="danger" onClick={handleDeleteAccount}>Delete Account</Button>
+            </Modal.Footer>
+         </Modal>
+
+         {/* MODAL */}
+         <Modal size="sm" show={showModal} onHide={() => setShowModal(false)} centered animation={false}>
+            <Modal.Header closeButton>
+               <Modal.Title className='text-warning fs-5'>{modalData.title}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>{modalData.message}</Modal.Body>
+         </Modal>
+
       </Container>
    );
 }

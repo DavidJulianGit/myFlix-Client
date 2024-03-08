@@ -1,8 +1,9 @@
 import { createRoot } from 'react-dom/client';
 import { Container } from 'react-bootstrap';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import { store } from './redux/store'
 import MainView from './components/main-view/main-view';
+
 
 
 // Styles
