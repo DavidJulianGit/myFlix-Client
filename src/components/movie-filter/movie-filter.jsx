@@ -5,7 +5,7 @@ import { XLg } from 'react-bootstrap-icons';
 
 //REDUX
 import { useSelector, useDispatch } from 'react-redux';
-import { setFilter } from '../../redux/reducers/movies';
+import { setFilter } from '../../redux/Slices/movies';
 
 export default function MovieFilter() {
    const filter = useSelector((state) => state.movies.filter);

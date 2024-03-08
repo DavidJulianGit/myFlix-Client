@@ -2,7 +2,7 @@ import React from 'react';
 import { Navbar, Nav, Container, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { clearUser } from '../../redux/reducers/user';
+import { clearUser } from '../../redux/Slices/user';
 
 export default function NavigationBar() {
 

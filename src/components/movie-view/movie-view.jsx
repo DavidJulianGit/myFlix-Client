@@ -8,7 +8,7 @@ import MovieCard from '../movie-card/movie-card';
 import combineGenreNames from '../../utilities/combineGenreNames';
 import findSimilarMovies from '../../utilities/findSimilarMovies';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleFavorite } from '../../redux/reducers/user';
+import { toggleFavorite } from '../../redux/Slices/user';
 
 
 export default function MovieView() {

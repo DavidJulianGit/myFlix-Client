@@ -4,8 +4,8 @@ import { Container, Row, Col, Spinner } from 'react-bootstrap';
 
 //REDUX
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchMovies } from '../../redux/reducers/movies';
-import { setUserData, setToken } from '../../redux/reducers/user';
+import { fetchMovies } from '../../redux/Slices/movies';
+import { setUserData, setToken } from '../../redux/Slices/user';
 
 // Components
 

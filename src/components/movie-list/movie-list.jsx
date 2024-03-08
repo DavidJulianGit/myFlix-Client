@@ -10,14 +10,20 @@ export default function MovieList() {
    const filter = useSelector((state) => state.movies.filter).trim().toLowerCase();
 
 
-   let filteredMovies = null;
+   let filteredMovies = movies.filter((movie) => {
+      return movie.title.toLowerCase().includes(filter);
+   });
+
    useEffect(() => {
-      filteredMovies = movies.filter((movie) => {
-         return movie.title.toLowerCase().includes(filter);
-      });
+      if (filteredMovies === null) {
+         console.log('inside if in useEffect in MovieList');
+         filteredMovies = movies.filter((movie) => {
+            return movie.title.toLowerCase().includes(filter);
+         });
+      }
    }, [filter]);
 
-
+   console.log(filteredMovies);
    const movieCards = filteredMovies.map(movie => {
       return <MovieCard key={movie.id} movie={movie} />;
    });

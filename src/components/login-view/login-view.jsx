@@ -11,7 +11,8 @@ import {
 } from 'react-bootstrap';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../../redux/reducers/user';
+import { loginUser } from '../../redux/Slices/user';
+import { EyeSlashFill, EyeFill } from 'react-bootstrap-icons';
 
 export default function LoginView({ onLoggedIn }) {
 
@@ -109,7 +110,7 @@ export default function LoginView({ onLoggedIn }) {
                            variant="outline-secondary"
                            onClick={togglePasswordVisibility}
                         >
-                           {passwordShown ? "Hide" : "Show"}
+                           {passwordShown ? <EyeSlashFill size={20} /> : <EyeFill size={20} />}
                         </Button>
                      </InputGroup>
                   </Form.Group>

@@ -14015,10 +14015,6 @@ p {
   height: 100%;
 }
 
-.nav-link-logout {
-  margin-left: auto;
-}
-
 .favoriteMovieIcon {
   cursor: pointer;
   z-index: 1;

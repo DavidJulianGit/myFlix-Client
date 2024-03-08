@@ -11,7 +11,7 @@ import {
    Modal
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserData, clearUser } from '../../redux/reducers/user';
+import { setUserData, clearUser } from '../../redux/Slices/user';
 import { EyeSlashFill, EyeFill } from 'react-bootstrap-icons';
 import formatDateForInput from '../../utilities/formatDate';
 
@@ -36,7 +36,7 @@ export default function ProfileView() {
 
    const togglePasswordVisibility = () => {
       setPasswordShown(!passwordShown);
-   }
+   };
 
    function fetchRequest(data, type) {
 
@@ -49,7 +49,7 @@ export default function ProfileView() {
             Authorization: `Bearer ${token}`
          },
          body: JSON.stringify(data),
-      }
+      };
 
 
       // Set fetchOptions and modal content according to request type
@@ -142,17 +142,17 @@ export default function ProfileView() {
    let favoriteMovies = user && user.favoriteMovies ? movies.filter(m => user.favoriteMovies.includes(m.id)) : [];
    const favoriteMovieCards = favoriteMovies.map(movie => {
       return <MovieCard key={movie.id} movie={movie} />;
-   })
+   });
 
    return (
       <Container className="mt-5">
          <Row>
-            <Col className=''>
+            <Col>
                <h2 className='mb-4'>My Favorite Movies</h2>
             </Col>
          </Row>
          <Row className="g-4">
-            {favoriteMovieCards}
+            {favoriteMovieCards.lenght > 0 ? favoriteMovieCards : <Col><p className=''>Your list of favorite movies is unfortunately still empty. :(</p></Col>}
          </Row>
          <hr></hr>
          <Row>
@@ -244,7 +244,7 @@ export default function ProfileView() {
                      <InputGroup>
                         <Form.Control
                            id="Password"
-                           type={passwordShown ? "text" : "password"}
+                           type={passwordShown ? 'text' : 'password'}
                            value={newPassword}
                            onChange={(e) => setNewPassword(e.target.value)}
                            minLength="8"
@@ -264,7 +264,7 @@ export default function ProfileView() {
 
                         <Form.Control
                            id="newPasswordRepeat"
-                           type={passwordShown ? "text" : "password"}
+                           type={passwordShown ? 'text' : 'password'}
                            value={newPasswordRepeat}
                            onChange={(e) => setNewPasswordRepeat(e.target.value)}
                            minLength="8"
@@ -306,7 +306,7 @@ export default function ProfileView() {
                      type='text'
                      id="deleteAccountCheck"
                      onChange={(e) => {
-                        e.target.value === StringToDeleteAccount ? setCheckPhrase(true) : setCheckPhrase(false)
+                        e.target.value === StringToDeleteAccount ? setCheckPhrase(true) : setCheckPhrase(false);
                      }}
                   />
                   <Button variant='danger' onClick={() => setShowDeleteConfirmationModal(true)} disabled={!checkPhrase}>

@@ -10,7 +10,7 @@ import {
 } from 'react-bootstrap';
 import { EyeSlashFill, EyeFill } from 'react-bootstrap-icons';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../../redux/reducers/user';
+import { loginUser } from '../../redux/Slices/user';
 
 const signupUser = async (userData) => {
    try {
