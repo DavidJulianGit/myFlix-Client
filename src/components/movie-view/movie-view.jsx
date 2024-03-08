@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+
 import { Container, Row, Col, Button, Image, } from 'react-bootstrap';
 import { useParams } from 'react-router';
 import { IoStarOutline, IoStar } from "react-icons/io5";
@@ -7,61 +7,35 @@ import { IoStarOutline, IoStar } from "react-icons/io5";
 import MovieCard from '../movie-card/movie-card';
 import combineGenreNames from '../../utilities/combineGenreNames';
 import findSimilarMovies from '../../utilities/findSimilarMovies';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleFavorite } from '../../redux/Slices/user';
 
-export default function MovieView({ movies, user, JWT, updateFavorites }) {
 
+export default function MovieView() {
+
+   // REDUX
+   const movies = useSelector((state) => state.movies.data);
+   const dispatch = useDispatch();
+
+   // get the movieId from the URL
    const { movieId } = useParams();
-   const movie = movies.find(m => m.title === movieId);
 
-   const similarMovies = findSimilarMovies(movies, movie).map( movie => {
-      return (
-         <MovieCard 
-            movie={movie} 
-            user={user}
-            JWT={JWT}
-            updateFavorites={updateFavorites}
-         />
-      );
-   })
+   // find movie by movieId
+   const movie = movies.find(movie => movie.title === movieId);
 
-   const isFavorite = user && user.favoriteMovies ? user.favoriteMovies.includes(movie.id) : false;
-   const favoriteIconStyle = {
-      position: 'absolute',
-      top: '10px',
-      right: '10px',
-      cursor: 'pointer',
-      zIndex: 1,
-   };
+   // check if movie is a favorite
+   const isFavorite = useSelector((state) => state.user.userData.favoriteMovies.includes(movie.id));
 
-   const toggleFavorite = (event) => {
-      event.preventDefault();
+   // find similar movies
+   const similarMovies = findSimilarMovies(movies, movie).map(movie => <MovieCard key={movie.id} movie={movie} />);
 
-      const headers = {
-         'Content-Type': 'application/json',
-         Host: 'myflix-z30i.onrender.com',
-         Authorization: `Bearer ${JWT}`
-      }
+   const toggle = () => {
+      dispatch(toggleFavorite({
+         movieId: movie.id,
+         isFavorite
+      }));
+   }
 
-      const UpdateFavoriteMovieURL = `https://myflix-z30i.onrender.com/users/${user.email}/favoriteMovies/${movie.id}`;
-
-      fetch(UpdateFavoriteMovieURL, {
-         method: isFavorite ? 'DELETE' : 'POST',
-         headers: headers,
-
-      })
-         .then((response) => response.json())
-         .then((data) => {
-            console.log(data);
-            updateFavorites(data);
-         })
-         .catch((e) => {
-            console.error('Error:', e);
-            alert('Something went wrong: ' + e.message);
-         });
-
-
-   };
-   
    return (
       <Container className='col-xl-10 col-l-11'>
          <Row>
@@ -93,47 +67,27 @@ export default function MovieView({ movies, user, JWT, updateFavorites }) {
 
                      <IoStar
                         size="32px"
-                        style={favoriteIconStyle}
-                        onClick={toggleFavorite}
+                        className='favoriteMovieIcon'
+                        onClick={toggle}
                      />
 
                      :
                      <IoStarOutline
                         size="32px"
-                        style={favoriteIconStyle}
-                        onClick={toggleFavorite}
+                        className='favoriteMovieIcon'
+                        onClick={toggle}
                      />
                   }
-                </div>
+               </div>
             </Col>
          </Row>
          <hr></hr>
          <Row>
-            
+            <h2>Similar Movies</h2>
             {similarMovies}
-            
+
          </Row>
       </Container>
    );
 }
 
-MovieView.propTypes = {
-   movies: PropTypes.arrayOf(
-
-      PropTypes.shape(
-         {
-            id: PropTypes.string.isRequired,
-            title: PropTypes.string.isRequired,
-            director: PropTypes.string.isRequired,
-            genres: PropTypes.arrayOf(
-               PropTypes.shape({
-                  name: PropTypes.string.isRequired,
-               })
-            ).isRequired,
-            description: PropTypes.string.isRequired,
-            poster: PropTypes.string.isRequired,
-         }
-      )
-
-   ).isRequired,
-};

@@ -1,89 +1,96 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
+import { Container, Row, Col, Spinner } from 'react-bootstrap';
 
-import MovieCard from '../movie-card/movie-card';
+//REDUX
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchMovies } from '../../redux/Slices/movies';
+import { setUserData, setToken } from '../../redux/Slices/user';
+
+// Components
+
 import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
 import SignupView from '../signup-view/signup-view';
-import NavigationBar from '../nagivation-bar/navigation-bar';
+import NavigationBar from '../navigation-bar/navigation-bar';
 import ProfileView from '../profile-view/profile-view';
+import MovieList from '../movie-list/movie-list';
+
 
 export default function MainView() {
-   // Local Storage
-   const storedUser = JSON.parse(localStorage.getItem('user'));
-   const storedToken = localStorage.getItem('token');
 
-   // State
-   const [user, setUser] = useState(storedUser ? storedUser : null);
-   const [token, setToken] = useState(storedToken ? storedToken : null);
-   const [movies, setMovies] = useState([]);
+   // Redux
+   const movies = useSelector((state) => state.movies.data);
+   const moviesStatus = useSelector((state) => state.movies.status);
+   const moviesError = useSelector((state) => state.movies.error);
+   const user = useSelector((state) => state.user.userData);
+   const token = useSelector((state) => state.user.token);
+   const dispatch = useDispatch();
 
-
-
-   const APIUrl = 'https://myflix-z30i.onrender.com/movies';
+   // Function to safely parse JSON from localStorage
+   const safelyParseJSON = (json) => {
+      try {
+         return JSON.parse(json);
+      } catch (error) {
+         console.error('Parsing error on ', json, error);
+         return null; // Return null or any other fallback value on error
+      }
+   };
 
    // Load data from API
    useEffect(() => {
-      if (!token) {
-         return;
+
+      // In case user & token are saved in local storage - user does not have to login again.
+      const savedUser = safelyParseJSON(localStorage.getItem('user'));
+      const savedToken = localStorage.getItem('token');
+
+      if (!user && savedUser) {
+         dispatch(setUserData(savedUser));
+      }
+      if (!token && savedToken) {
+         dispatch(setToken(savedToken));
       }
 
-      fetch(APIUrl, {
-         headers: { Authorization: `Bearer ${token}` },
-      })
-         .then((response) => response.json())
-         .then((data) => {
-
-            const moviesFromApi = data.map((movie) => {
-               return {
-                  id: movie._id,
-                  title: movie.title,
-                  poster: movie.poster,
-                  director: movie.director.name,
-                  genres: movie.genres,
-                  description: movie.description,
-               };
-            });
-
-            setMovies(moviesFromApi);
-         });
-   }, [token]);
+      if (savedToken && !movies.length) {
+         dispatch(fetchMovies(savedToken));
+      }
+   }, [user, token, movies.length, dispatch]);
 
 
-   const handleLogout = () => {
-      // Clear local storage
-      localStorage.clear();
-      // Reset user and token state
-      setUser(null);
-      setToken(null);
-   };
+   // Handling loading state
+   if (moviesStatus === 'loading') {
+      return (
+         <Container>
+            <Row>
+               <Col className="d-flex justify-content-center align-items-center">
+                  <Spinner animation="border" role="status">
+                     <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+               </Col>
+            </Row>
+         </Container>
+      );
+   }
 
-   // Update the user's favorite movies list
-   const updateUserFavoriteMovies = (updatedUser) => {
-      setUser(updatedUser); // Assuming the updatedUser object includes the updated list of favorite movies
-      localStorage.setItem('user', JSON.stringify(updatedUser)); // Update local storage
-   };
+   // Handling error state
+   if (moviesStatus === 'failed') {
+      return (
+         <Container>
+            <Row>
+               <Col className="d-flex justify-content-center align-items-center">
+                  <p>Error fetching movies: {moviesError}</p>
+               </Col>
+            </Row>
+         </Container>
+      );
+   }
 
-   const movieCards = movies.map(movie => {
-      return <MovieCard
-         JWT={token}
-         user={user}
-         key={movie.id}
-         movie={movie}
-         updateFavorites={updateUserFavoriteMovies}
-      />;
-   })
 
-   let favoriteMovies = user && user.favoriteMovies ? movies.filter(m => user.favoriteMovies.includes(m.id)) : [];
-   const favoriteMovieCards = favoriteMovies.map(movie => {
-      return <MovieCard JWT={token} user={user} key={movie.id} movie={movie} updateFavorites={updateUserFavoriteMovies} />;
-   })
+
 
    return (
       <BrowserRouter>
-         <NavigationBar user={user} onLoggedOut={handleLogout} />
+         <NavigationBar />
          <Container className="mt-5">
             <Routes>
                <Route path="/signup" element={
@@ -92,10 +99,7 @@ export default function MainView() {
                <Route path="/login" element={
                   user ?
                      (<Navigate to="/" />) :
-                     <LoginView onLoggedIn={(user, token) => {
-                        setUser(user);
-                        setToken(token);
-                     }} />}
+                     <LoginView />}
                />
                <Route
                   path="/movies"
@@ -103,21 +107,16 @@ export default function MainView() {
                      !user ? <Navigate to="/login" replace /> :
                         movies.length === 0 ?
                            <Col><h2 className="my-4">No movies to display!</h2></Col> :
-                           <Row className="g-4">
-                              {movieCards}
-                           </Row>
+
+                           <MovieList />
                   }
                />
 
                <Route
                   path="/movies/:movieId"
-                  element={!user ? <Navigate to="/login" replace /> : movies.length === 0 ? <Col>No movies to display!</Col> :
-                     <MovieView 
-                        movies={movies} 
-                        JWT={token} 
-                        user={user} 
-                        updateFavorites={updateUserFavoriteMovies}
-                     />}
+                  element={!user ? <Navigate to="/login" replace /> : movies.length === 0 ?
+                     <Col>No movies to display!</Col> :
+                     <MovieView />}
                />
 
                <Route
@@ -128,30 +127,7 @@ export default function MainView() {
 
                <Route path='/profile'
                   element={
-                     user ?
-                        <>
-                           <Container className="mt-5">
-                              <Row>
-                                 <Col className=''>
-                                    <h2 className='mb-4'>My Favorite Movies</h2>
-                                 </Col>
-                              </Row>
-                              <Row className="g-4">
-                                 {favoriteMovieCards}
-                              </Row>
-                           </Container>
-                           <hr></hr>
-                           <ProfileView
-                              movies={movies}
-                              userData={user}
-                              JWT={token}
-                              onLoggedIn={(user, token) => {
-                                 setUser(user);
-                              }}
-                              handleLogout={handleLogout}
-                           />
-                        </>
-                        : <Navigate to="/login" replace />
+                     user ? <ProfileView /> : <Navigate to="/login" replace />
                   }
                />
 

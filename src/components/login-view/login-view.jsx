@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
    Container,
    Row,
@@ -6,60 +6,64 @@ import {
    Form,
    Button,
    InputGroup,
-   Modal
+   Modal,
+   Spinner
 } from 'react-bootstrap';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../../redux/Slices/user';
+import { EyeSlashFill, EyeFill } from 'react-bootstrap-icons';
 
 export default function LoginView({ onLoggedIn }) {
-   const [userData, setUserData] = useState({
-      email: '',
-      password: '',
-   });
+
+   // REDUX
+   const userStatus = useSelector((state) => state.user.status);
+   const userError = useSelector((state) => state.user.error);
+   const dispatch = useDispatch();
+
+   // Local State
    const [passwordShown, setPasswordShown] = useState(false);
    const [showModal, setShowModal] = useState(false);
    const [modalMessage, setModalMessage] = useState('');
+   const [localUserData, setLocalUserData] = useState({
+      email: '',
+      password: '',
+   });
 
    const togglePasswordVisibility = () => {
       setPasswordShown(!passwordShown);
    }
 
-
+   // Handling login
    const handleSubmit = (event) => {
       event.preventDefault();
-
-      const headers = {
-         'Content-Type': 'application/json',
-         Host: 'myflix-z30i.onrender.com',
-      };
-
-      const data = {
-         email: userData.email,
-         password: userData.password
-      }
-
-      const LoginURL = 'https://myflix-z30i.onrender.com/login';
-
-      fetch(LoginURL, {
-         method: 'POST',
-         headers: headers,
-         body: JSON.stringify(data),
-      })
-         .then((response) => response.json())
-         .then((data) => {
-            if (data.user) {
-               localStorage.setItem('user', JSON.stringify(data.user));
-               localStorage.setItem('token', data.token);
-               onLoggedIn(data.user, data.token);
-            } else {
-               setModalMessage(data.message.message);
-               setShowModal(true);
-            }
-         })
-         .catch((e) => {
-            setModalMessage('Login failed: Please check your credentials and try again.');
-            setShowModal(true);
-         });
+      dispatch(loginUser({ email: localUserData.email, password: localUserData.password }));
    };
+
+   // Handling error state
+   useEffect(() => {
+      if (userStatus === 'failed') {
+         setModalMessage(userError);
+         setShowModal(true);
+      }
+   }, [userStatus, userError]);
+
+   // Handling loading spinner
+   if (userStatus === 'loading') {
+      return (
+         <Container>
+            <Row>
+               <Col className="d-flex justify-content-center align-items-center" >
+                  <Spinner animation="border" role="status">
+                     <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+               </Col>
+            </Row>
+         </Container>
+      );
+   }
+
+
 
    return (
       <Container className="mt-5">
@@ -74,10 +78,10 @@ export default function LoginView({ onLoggedIn }) {
                         type="email"
                         id="Email"
                         className="rounded"
-                        value={userData.email}
+                        value={localUserData.email}
                         onChange={(e) =>
-                           setUserData((prevUserData) => ({
-                              ...prevUserData,
+                           setLocalUserData((prevlocalUserData) => ({
+                              ...prevlocalUserData,
                               email: e.target.value,
                            }))
                         }
@@ -92,10 +96,10 @@ export default function LoginView({ onLoggedIn }) {
                         <Form.Control
                            id="Password"
                            type={passwordShown ? "text" : "password"}
-                           value={userData.password}
+                           value={localUserData.password}
                            onChange={(e) =>
-                              setUserData((prevUserData) => ({
-                                 ...prevUserData,
+                              setLocalUserData((prevlocalUserData) => ({
+                                 ...prevlocalUserData,
                                  password: e.target.value,
                               }))
                            }
@@ -106,7 +110,7 @@ export default function LoginView({ onLoggedIn }) {
                            variant="outline-secondary"
                            onClick={togglePasswordVisibility}
                         >
-                           {passwordShown ? "Hide" : "Show"}
+                           {passwordShown ? <EyeSlashFill size={20} /> : <EyeFill size={20} />}
                         </Button>
                      </InputGroup>
                   </Form.Group>
@@ -120,8 +124,11 @@ export default function LoginView({ onLoggedIn }) {
          </Row>
          <Modal show={showModal} onHide={() => setShowModal(false)}>
             <Modal.Header closeButton>
-               <Modal.Title>{modalMessage}</Modal.Title>
+               <Modal.Title className='text-warning'>Error</Modal.Title>
             </Modal.Header>
+            <Modal.Body>
+               {modalMessage}
+            </Modal.Body>
          </Modal>
       </Container>
    );

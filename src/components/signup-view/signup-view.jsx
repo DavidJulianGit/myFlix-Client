@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
    Modal,
    Container,
@@ -8,66 +8,71 @@ import {
    Button,
    InputGroup,
 } from 'react-bootstrap';
-import { useState } from 'react';
+import { EyeSlashFill, EyeFill } from 'react-bootstrap-icons';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../redux/Slices/user';
 
-export default function SignupView({ onLoggedIn }) {
-   const [userData, setUserData] = useState({
+const signupUser = async (userData) => {
+   try {
+      const SignUpURL = 'https://myflix-z30i.onrender.com/users';
+      const response = await fetch(SignUpURL, {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify(userData),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 422) {
+         throw new Error(data.errors.map(err => err.msg).join(', '));
+      } else if (response.status === 201) {
+         return data;
+      } else if (response.status === 500) {
+         throw new Error(data.message || 'Server error. Please try again later.');
+      }
+   } catch (error) {
+      throw error;
+   }
+};
+
+export default function SignupView() {
+   const [formData, setFormData] = useState({
       firstname: '',
       lastname: '',
       email: '',
       password: '',
       birthday: '',
    });
-
-   const [passwordShown, setPasswordShown] = useState(false);
    const [showModal, setShowModal] = useState(false);
-   const [modalData, setModalData] = useState({ title: '', message: '' });
+   const [modalContent, setModalContent] = useState({ title: '', message: '' });
+   const [passwordShown, setPasswordShown] = useState(false);
+   const dispatch = useDispatch();
 
    const togglePasswordVisibility = () => {
       setPasswordShown(!passwordShown);
-   }
+   };
 
+   const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData(prevState => ({
+         ...prevState,
+         [name]: value,
+      }));
+   };
 
-   const handleSubmit = (event) => {
+   const handleSubmit = async (event) => {
       event.preventDefault();
+      try {
+         const userData = await signupUser(formData);
 
-      const data = {
-         firstname: userData.firstname,
-         lastname: userData.lastname,
-         email: userData.email,
-         password: userData.password,
-         birthday: userData.birthday,
-      };
+         setModalContent({ title: 'Welcome', message: `Signup successful! Welcome, ${userData.name || 'user'}.` });
+         setShowModal(true);
+         dispatch(loginUser({ email: formData.email, password: formData.password }));
 
-      const headers = {
-         'Content-Type': 'application/json',
-         Host: 'myflix-z30i.onrender.com',
-      };
-
-      const SignUpURL = 'https://myflix-z30i.onrender.com/users';
-
-      fetch(SignUpURL, {
-         method: 'POST',
-         headers: headers,
-         body: JSON.stringify(data),
-      })
-         .then((response) => {
-
-            console.log(response.status);
-
-            if (response.status === 201) {
-
-               window.location.reload();
-
-            }
-            else {
-               return response.text().then(text => { throw new Error(text) });
-            }
-         })
-         .catch(error => {
-            setModalData({ title: 'Signup failed', message: error });
-            setShowModal(true);
-         });
+      } catch (error) {
+         setModalContent({ title: 'Error', message: error.message });
+         setShowModal(true);
+      }
    };
 
    return (
@@ -83,14 +88,10 @@ export default function SignupView({ onLoggedIn }) {
                      <Form.Control
                         type="text"
                         id="firstname"
+                        name="firstname"
                         className="rounded"
-                        value={userData.firstname}
-                        onChange={(e) =>
-                           setUserData((prevUserData) => ({
-                              ...prevUserData,
-                              firstname: e.target.value,
-                           }))
-                        }
+                        value={formData.firstname}
+                        onChange={handleChange}
                         required
                      />
                   </Form.Group>
@@ -101,13 +102,9 @@ export default function SignupView({ onLoggedIn }) {
                      <Form.Control
                         type="text"
                         id="lastname"
-                        value={userData.lastname}
-                        onChange={(e) =>
-                           setUserData((prevUserData) => ({
-                              ...prevUserData,
-                              lastname: e.target.value,
-                           }))
-                        }
+                        name="lastname"
+                        value={formData.lastname}
+                        onChange={handleChange}
                         required
                      />
                   </Form.Group>
@@ -118,15 +115,10 @@ export default function SignupView({ onLoggedIn }) {
                      <Form.Control
                         type="email"
                         id="email"
+                        name="email"
                         className="rounded"
-                        value={userData.email}
-                        onChange={(e) =>
-                           setUserData((prevUserData) => ({
-                              ...prevUserData,
-                              email: e.target.value,
-                           }))
-                        }
-
+                        value={formData.email}
+                        onChange={handleChange}
                         required
                      />
                   </Form.Group>
@@ -137,14 +129,10 @@ export default function SignupView({ onLoggedIn }) {
                      <InputGroup>
                         <Form.Control
                            id="Password"
+                           name="password"
                            type={passwordShown ? "text" : "password"}
-                           value={userData.password}
-                           onChange={(e) =>
-                              setUserData((prevUserData) => ({
-                                 ...prevUserData,
-                                 password: e.target.value,
-                              }))
-                           }
+                           value={formData.password}
+                           onChange={handleChange}
                            minLength="8"
                            required
                         />
@@ -152,7 +140,7 @@ export default function SignupView({ onLoggedIn }) {
                            variant="outline-secondary"
                            onClick={togglePasswordVisibility}
                         >
-                           {passwordShown ? "Hide" : "Show"}
+                           {passwordShown ? <EyeSlashFill size={20} /> : <EyeFill size={20} />}
                         </Button>
                      </InputGroup>
                   </Form.Group>
@@ -163,20 +151,13 @@ export default function SignupView({ onLoggedIn }) {
                      <Form.Control
                         type="date"
                         id="birthday"
+                        name="birthday"
                         className="rounded"
-                        value={userData.birthday}
-                        onChange={(e) => {
-                           console.log(e.target.value);
-                           setUserData((prevUserData) => ({
-                              ...prevUserData,
-                              birthday: e.target.value,
-                           }));
-                        }}
-
+                        value={formData.birthday}
+                        onChange={handleChange}
                         required
                      />
                   </Form.Group>
-
                   <Button type="submit" className="mt-2">
                      Sign Up
                   </Button>
@@ -185,11 +166,11 @@ export default function SignupView({ onLoggedIn }) {
             <Col></Col> {/* Empty column for spacing */}
          </Row>
          {/* MODAL */}
-         <Modal show={showModal} onHide={() => setShowModal(false)}>
+         <Modal size="sm" centered animation={false} show={showModal} onHide={() => setShowModal(false)}>
             <Modal.Header closeButton>
-               <Modal.Title>{modalData.title}</Modal.Title>
+               <Modal.Title>Welcome!</Modal.Title>
             </Modal.Header>
-            <Modal.Body>{modalData.message}</Modal.Body>
+            <Modal.Body>{modalContent.message}</Modal.Body>
          </Modal>
       </Container >
    );

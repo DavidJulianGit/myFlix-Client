@@ -1,50 +1,24 @@
-import { Col, Card, Badge } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import combineGenreNames from '../../utilities/combineGenreNames';
+import { Col, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { IoStarOutline, IoStar } from "react-icons/io5";
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleFavorite } from '../../redux/Slices/user';
 
 
-export default function MovieCard({ movie, user, JWT, updateFavorites }) {
+export default function MovieCard({ movie }) {
 
-   const isFavorite = user && user.favoriteMovies ? user.favoriteMovies.includes(movie.id) : false;
+   //REDUX
+   const isFavorite = useSelector((state) => state.user.userData.favoriteMovies.includes(movie.id));
+   const dispatch = useDispatch();
 
-   const toggleFavorite = (event) => {
-      event.preventDefault();
-
-      const headers = {
-         'Content-Type': 'application/json',
-         Host: 'myflix-z30i.onrender.com',
-         Authorization: `Bearer ${JWT}`
-      }
-
-      const UpdateFavoriteMovieURL = `https://myflix-z30i.onrender.com/users/${user.email}/favoriteMovies/${movie.id}`;
-
-      fetch(UpdateFavoriteMovieURL, {
-         method: isFavorite ? 'DELETE' : 'POST',
-         headers: headers,
-
-      })
-         .then((response) => response.json())
-         .then((data) => {
-            console.log(data);
-            updateFavorites(data);
-         })
-         .catch((e) => {
-            console.error('Error:', e);
-            alert('Something went wrong: ' + e.message);
-         });
-
-
-   };
-
-   const favoriteIconStyle = {
-      position: 'absolute',
-      top: '10px',
-      right: '10px',
-      cursor: 'pointer',
-      zIndex: 1,
-   };
+   const toggle = () => {
+      dispatch(toggleFavorite({
+         movieId: movie.id,
+         isFavorite
+      }));
+   }
 
    return (
       <Col lg={4} md={6} className="mb-3">
@@ -61,15 +35,15 @@ export default function MovieCard({ movie, user, JWT, updateFavorites }) {
 
                   <IoStar
                      size="32px"
-                     style={favoriteIconStyle}
-                     onClick={toggleFavorite}
+                     className='favoriteMovieIcon'
+                     onClick={toggle}
                   />
 
                   :
                   <IoStarOutline
                      size="32px"
-                     style={favoriteIconStyle}
-                     onClick={toggleFavorite}
+                     className='favoriteMovieIcon'
+                     onClick={toggle}
                   />
                }
             </div>
