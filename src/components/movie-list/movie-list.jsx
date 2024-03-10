@@ -23,7 +23,7 @@ export default function MovieList() {
       }
    }, [filter]);
 
-   console.log(filteredMovies);
+
    const movieCards = filteredMovies.map(movie => {
       return <MovieCard key={movie.id} movie={movie} />;
    });

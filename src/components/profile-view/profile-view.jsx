@@ -152,7 +152,7 @@ export default function ProfileView() {
             </Col>
          </Row>
          <Row className="g-4">
-            {favoriteMovieCards.lenght > 0 ? favoriteMovieCards : <Col><p className=''>Your list of favorite movies is unfortunately still empty. :(</p></Col>}
+            {favoriteMovieCards.length > 0 ? favoriteMovieCards : <Col><p className=''>Your list of favorite movies is unfortunately still empty. :(</p></Col>}
          </Row>
          <hr></hr>
          <Row>
