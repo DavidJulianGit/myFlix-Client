@@ -5,7 +5,7 @@ import { useParams } from 'react-router';
 import { IoStarOutline, IoStar } from "react-icons/io5";
 
 import MovieCard from '../movie-card/movie-card';
-import combineGenreNames from '../../utilities/combineGenreNames';
+
 import findSimilarMovies from '../../utilities/findSimilarMovies';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleFavorite } from '../../redux/Slices/user';
@@ -34,6 +34,10 @@ export default function MovieView() {
          movieId: movie.id,
          isFavorite
       }));
+   }
+
+   function combineGenreNames(genres) {
+      return genres.map((genre) => genre.name).join(', ');
    }
 
    return (
