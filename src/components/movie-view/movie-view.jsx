@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
 
-import { Container, Row, Col, Button, Image, } from 'react-bootstrap';
+import React from 'react';
+import { Container, Row, Col, Image, } from 'react-bootstrap';
 import { useParams } from 'react-router';
 import { IoStarOutline, IoStar } from "react-icons/io5";
 
