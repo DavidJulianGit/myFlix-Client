@@ -2,9 +2,14 @@
 * {
 	font-family: 'Inter', sans-serif;
 }
+
 body {
-	padding-top: 100px;
-	padding-bottom: 3rem;
+	padding-bottom: 2rem;
+}
+@media (min-width: 576px) {
+	body {
+		padding-top: 80px;
+	}
 }
 p {
 	font-weight: 300;
@@ -76,4 +81,10 @@ p {
 	right: 10px;
 	cursor: pointer;
 	z-index: 1;
+}
+.unselectable {
+	-webkit-user-select: none; /* Safari */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard syntax */
 }

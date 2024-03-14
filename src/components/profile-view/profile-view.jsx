@@ -151,7 +151,7 @@ export default function ProfileView() {
                <h2 className='mb-4'>My Favorite Movies</h2>
             </Col>
          </Row>
-         <Row className="g-4">
+         <Row className='g-4'>
             {favoriteMovieCards.length > 0 ? favoriteMovieCards : <Col><p className=''>Your list of favorite movies is unfortunately still empty. :(</p></Col>}
          </Row>
          <hr></hr>
@@ -227,9 +227,11 @@ export default function ProfileView() {
                         }}
                      />
                   </Form.Group>
-                  <Button type="submit" className="mt-2">
-                     Save
-                  </Button>
+                  <div className="d-grid d-md-flex">
+                     <Button type="submit" className="mt-2">
+                        Save
+                     </Button>
+                  </div>
                </Form>
 
                {/* Changing Password Form*/}
@@ -261,7 +263,7 @@ export default function ProfileView() {
 
                   {/* password Check*/}
                   <Form.Group className="my-3">
-                     <Form.Label htmlFor="PasswordCheck">Repeat Password</Form.Label>
+                     <Form.Label htmlFor="newPasswordRepeat">Repeat Password</Form.Label>
 
                      <InputGroup>
 
@@ -285,14 +287,14 @@ export default function ProfileView() {
 
                      </Form.Control.Feedback>
                   </Form.Group>
-
-                  <Button
-                     type="submit"
-                     className="mt-2"
-                     disabled={!(newPassword && newPasswordRepeat && newPassword === newPasswordRepeat)}>
-                     Change Password
-                  </Button>
-
+                  <div className="d-grid d-md-flex">
+                     <Button
+                        type="submit"
+                        className="mt-2"
+                        disabled={!(newPassword && newPasswordRepeat && newPassword === newPasswordRepeat)}>
+                        Change Password
+                     </Button>
+                  </div>
                </Form>
 
                <hr></hr>
@@ -300,9 +302,11 @@ export default function ProfileView() {
                <Form className="form" onSubmit={handleDeleteAccount}>
                   <h3>Delete Account</h3>
                   <Form.Label htmlFor="deleteAccountCheck">
-                     <p className='fw-lighter'>To confirm account deletion, type: <br /><span className='fw-semibold'>
-                        {StringToDeleteAccount}
-                     </span> <br />into the box below.</p>
+                     <p className='fw-lighter'>To confirm account deletion, type:</p>
+                     <p className="unselectable">
+                        {' ' + StringToDeleteAccount + ' '}
+                     </p>
+                     <p className='fw-lighter'>into the box below.</p>
                   </Form.Label>
                   <Form.Control
                      className="mb-2"
@@ -312,9 +316,11 @@ export default function ProfileView() {
                         e.target.value === StringToDeleteAccount ? setCheckPhrase(true) : setCheckPhrase(false);
                      }}
                   />
-                  <Button variant='danger' onClick={() => setShowDeleteConfirmationModal(true)} disabled={!checkPhrase}>
-                     Delete Account
-                  </Button>
+                  <div className="d-grid d-md-flex">
+                     <Button variant='danger' onClick={() => setShowDeleteConfirmationModal(true)} disabled={!checkPhrase}>
+                        Delete Account
+                     </Button>
+                  </div>
                </Form>
             </Col>
          </Row>
@@ -351,6 +357,6 @@ export default function ProfileView() {
             <Modal.Body>{modalData.message}</Modal.Body>
          </Modal>
 
-      </Container>
+      </Container >
    );
 }

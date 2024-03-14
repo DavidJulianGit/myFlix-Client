@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
 
 //REDUX
@@ -8,7 +8,6 @@ import { fetchMovies } from '../../redux/Slices/movies';
 import { setUserData, setToken } from '../../redux/Slices/user';
 
 // Components
-
 import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
 import SignupView from '../signup-view/signup-view';
@@ -16,6 +15,8 @@ import NavigationBar from '../navigation-bar/navigation-bar';
 import ProfileView from '../profile-view/profile-view';
 import MovieList from '../movie-list/movie-list';
 
+// Utilities
+import ScrollToTop from '../../utilities/ScrollToTop';
 
 export default function MainView() {
 
@@ -91,6 +92,7 @@ export default function MainView() {
    return (
       <BrowserRouter>
          <NavigationBar />
+         <ScrollToTop />
          <Container className="mt-5">
             <Routes>
                <Route path="/signup" element={
