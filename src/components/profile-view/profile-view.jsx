@@ -156,11 +156,11 @@ export default function ProfileView() {
          </Row>
          <hr></hr>
          <Row>
-            <Col></Col> {/* Empty column for spacing */}
             <Col>
                {/* Updating User Data Form*/}
-               <h3 className="mb-4">Account Information</h3>
-               <Form className="login-form" onSubmit={handleUserUpdateSubmit}>
+
+               <Form className="form" onSubmit={handleUserUpdateSubmit}>
+                  <h2 className="mb-4">Account Information</h2>
                   {/* firstname */}
                   <Form.Group className="my-3">
                      <Form.Label htmlFor="Firstname">First Name</Form.Label>
@@ -233,11 +233,14 @@ export default function ProfileView() {
                </Form>
 
                {/* Changing Password Form*/}
-               <h4 className='mt-4'>Change password</h4>
-               <Form onSubmit={(event) => {
-                  event.preventDefault();
-                  setShowPasswordChangeModal(true);
-               }}>
+
+               <Form
+                  className="form"
+                  onSubmit={(event) => {
+                     event.preventDefault();
+                     setShowPasswordChangeModal(true);
+                  }}>
+                  <h4 className='mt-4'>Change password</h4>
                   {/* password */}
                   <Form.Group className="">
                      <Form.Label htmlFor="Password">New Password</Form.Label>
@@ -294,8 +297,8 @@ export default function ProfileView() {
 
                <hr></hr>
                {/* Delete Account Form*/}
-               <h3>Delete Account</h3>
-               <Form onSubmit={handleDeleteAccount}>
+               <Form className="form" onSubmit={handleDeleteAccount}>
+                  <h3>Delete Account</h3>
                   <Form.Label htmlFor="deleteAccountCheck">
                      <p className='fw-lighter'>To confirm account deletion, type: <br /><span className='fw-semibold'>
                         {StringToDeleteAccount}
@@ -314,7 +317,6 @@ export default function ProfileView() {
                   </Button>
                </Form>
             </Col>
-            <Col></Col> {/* Empty column for spacing */}
          </Row>
 
          {/* Change Password Confirmation MODAL */}

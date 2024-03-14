@@ -68,10 +68,9 @@ export default function LoginView({ onLoggedIn }) {
    return (
       <Container className="mt-5">
          <Row>
-            <Col></Col> {/* Empty column for spacing */}
             <Col>
                <h3 className="mb-4">Login</h3>
-               <Form className="login-form" onSubmit={handleSubmit}>
+               <Form className="form" onSubmit={handleSubmit}>
                   <Form.Group>
                      <Form.Label htmlFor="Email">Email</Form.Label>
                      <Form.Control
@@ -120,7 +119,6 @@ export default function LoginView({ onLoggedIn }) {
                   </Button>
                </Form>
             </Col>
-            <Col></Col> {/* Empty column for spacing */}
          </Row>
          <Modal show={showModal} onHide={() => setShowModal(false)}>
             <Modal.Header closeButton>

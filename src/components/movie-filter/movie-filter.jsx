@@ -13,7 +13,7 @@ export default function MovieFilter() {
 
    return (
       <>
-         <Form.Group className="">
+         <Form.Group className="form">
             <Form.Label htmlFor="filter">Search</Form.Label>
             <InputGroup>
                <Form.Control

@@ -78,10 +78,9 @@ export default function SignupView() {
    return (
       <Container className="mt-5">
          <Row>
-            <Col></Col> {/* Empty column for spacing */}
             <Col>
                <h3 className="mb-4">Sign Up</h3>
-               <Form className="login-form" onSubmit={handleSubmit}>
+               <Form className="form" onSubmit={handleSubmit}>
                   {/* firstname */}
                   <Form.Group className="my-3">
                      <Form.Label htmlFor="firstname">First Name</Form.Label>
@@ -163,7 +162,6 @@ export default function SignupView() {
                   </Button>
                </Form>
             </Col>
-            <Col></Col> {/* Empty column for spacing */}
          </Row>
          {/* MODAL */}
          <Modal size="sm" centered animation={false} show={showModal} onHide={() => setShowModal(false)}>
