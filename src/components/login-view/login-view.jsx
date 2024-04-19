@@ -69,8 +69,8 @@ export default function LoginView({ onLoggedIn }) {
       <Container className="mt-5">
          <Row>
             <Col>
-               <h3 className="mb-4">Login</h3>
                <Form className="form" onSubmit={handleSubmit}>
+                  <h3 className="mb-4">Login</h3>
                   <Form.Group>
                      <Form.Label htmlFor="Email">Email</Form.Label>
                      <Form.Control

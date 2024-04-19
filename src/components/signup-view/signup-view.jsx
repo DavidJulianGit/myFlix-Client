@@ -79,8 +79,8 @@ export default function SignupView() {
       <Container className="mt-5">
          <Row>
             <Col>
-               <h3 className="mb-4">Sign Up</h3>
                <Form className="form" onSubmit={handleSubmit}>
+                  <h3 className="mb-4">Sign Up</h3>
                   {/* firstname */}
                   <Form.Group className="my-3">
                      <Form.Label htmlFor="firstname">First Name</Form.Label>
