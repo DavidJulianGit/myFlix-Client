@@ -46,16 +46,9 @@ This will launch the application in your default web browser.
 ## Dependencies
 
 -  React
--  React DOM
--  Bootstrap & Bootswatch
--  Parcel
 -  Redux Toolkit for state management
--  React Redux for integrating Redux with React components
--  React Router for routing
 -  React Bootstrap and React Bootstrap Icons for UI components
--  React Icons for additional icon options
--  React Slick for creating carousels
--  PropTypes for type-checking props
+-  Bootswatch for the Theme
 
 ## Components and Redux Setup
 
